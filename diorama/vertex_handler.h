@@ -82,3 +82,5 @@ struct Vertex
 };
 
 void init_vertex_buffers();
+
+GLint vertex_attribute(GLint program, const char * name, GLint fields, GLsizei size, void * offset);

@@ -26,7 +26,7 @@ void compile_all_shaders(vector<Decl> &assets)
 
 	for (int i = 0; i < assets.size(); i++)
 	{
-		if (!assets[i].type == "asset" || (assets[i].subtype == "vertex_shader" || assets[i].subtype == "fragment_shader"))
+		if (assets[i].type != "asset" || (assets[i].subtype != "vertex_shader" && assets[i].subtype != "fragment_shader"))
 			printf("Illegal declaration of non-asset type.");
 
 		if (assets[i].subtype == "vertex_shader")

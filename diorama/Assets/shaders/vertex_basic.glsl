@@ -1,9 +1,8 @@
 #version 330 core
 
-
-in vec3 position;
 in vec2 tex_coord;
 in vec4 color;
+in vec3 position;
 
 out vec2 frag_tex_coord;
 out vec4 frag_color;

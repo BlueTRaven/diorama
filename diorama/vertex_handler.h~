@@ -3,9 +3,6 @@
 #include <glad\glad.h>
 #include <GLFW\glfw3.h>
 
-GLuint vertex_array;
-GLuint vertex_buffer;
-
 struct vec2
 {
 	float x, y;
@@ -85,3 +82,5 @@ struct Vertex
 };
 
 void init_vertex_buffers();
+
+GLint vertex_attribute(GLint program, const char * name, GLint fields, GLsizei size, void * offset);

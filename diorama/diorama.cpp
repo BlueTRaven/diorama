@@ -31,28 +31,16 @@ void draw(GLint program)
 	glUseProgram(program);
 
 	glBindBuffer(GL_ARRAY_BUFFER, vertex_buffer);
-	
-	//GLint attrib_position = glGetAttribLocation(program, "position");
-	//GLint attrib_tex_coord = glGetAttribLocation(program, "tex_coord");
-	//GLint attrib_color = glGetAttribLocation(program, "color");
 
-	glEnableVertexAttribArray(0);
-	glEnableVertexAttribArray(1);
-	glEnableVertexAttribArray(2);
-	
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)0);
-	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, tex_coords));
-	glVertexAttribPointer(2, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, color));
-
-	glBindAttribLocation(program, 0, "position");
-	glBindAttribLocation(program, 1, "tex_coord");
-	glBindAttribLocation(program, 2, "color");
+	GLint attrib_position = vertex_attribute(program, "position", 3, sizeof(Vertex), (void*)0);
+	GLint attrib_tex_coord = vertex_attribute(program, "tex_coord", 2, sizeof(Vertex), (void*)offsetof(Vertex, tex_coords));
+	GLint attrib_color = vertex_attribute(program, "color", 4, sizeof(Vertex), (void*)offsetof(Vertex, color));
 
 	glDrawArrays(GL_TRIANGLES, 0, 3);
 
- 	glDisableVertexAttribArray(0);
-	glDisableVertexAttribArray(1);
-	glDisableVertexAttribArray(2);
+ 	glDisableVertexAttribArray(attrib_position);
+	glDisableVertexAttribArray(attrib_tex_coord);
+	glDisableVertexAttribArray(attrib_color);
 
 	glfwSwapBuffers(window);
 }

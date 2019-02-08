@@ -6,5 +6,5 @@ in vec2 frag_tex_coord;
 
 void main()
 {
-//	color = frag_color;
+	color = frag_color;
 }
