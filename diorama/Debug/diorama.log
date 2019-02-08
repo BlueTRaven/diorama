@@ -1,0 +1,4 @@
+﻿  diorama.cpp
+diorama.obj : error LNK2019: unresolved external symbol _glfwCreateWindow referenced in function _main
+C:\Users\Taylor\Documents\Programming\C++\diorama\diorama\Libs\glfw3.lib : warning LNK4272: library machine type 'x64' conflicts with target machine type 'x86'
+C:\Users\Taylor\Documents\Programming\C++\diorama\Debug\diorama.exe : fatal error LNK1120: 1 unresolved externals

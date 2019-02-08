@@ -1,0 +1,12 @@
+#version 330 core
+
+vec3 position;
+vec2 tex_coord;
+vec4 color;
+
+void main()
+{
+	gl_Position.xyz = position;
+	gl_Position.w = 1.0;
+}
+

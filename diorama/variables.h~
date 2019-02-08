@@ -1,0 +1,32 @@
+#pragma once
+
+#include <string>
+#include <vector>
+#include <map>
+
+struct Decl_Parameter
+{
+	std::string name;
+	std::string value;
+	std::string type;
+};
+
+struct Decl
+{
+	std::string type;
+	std::string subtype;
+
+	std::string name;
+
+	std::map<std::string, Decl_Parameter> parameters;
+};
+
+std::vector<Decl> load_variable_file(const char * source);
+
+void get_tokens(std::vector<std::string> & tokens, std::string line);
+
+std::string get_end_token(std::vector<std::string> &tokens);
+
+void infer_param_type(Decl_Parameter &param);
+
+std::vector<Decl> get_all_decl_of_type(std::string type, vector<Decl> declarations);

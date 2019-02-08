@@ -1,0 +1,15 @@
+start_x 0;
+start_y 0;
+
+char_width 8;
+char_height 8;
+
+char_pad 2;
+
+rows 8;
+columns 16;
+
+col_0 "0123456789      ";
+col_1 "~abcdefghijklmno";
+col_2 "pqrstuvwxyz     ";
+col_4 ",.!?_-+>'/:     ";
