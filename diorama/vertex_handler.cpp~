@@ -62,7 +62,7 @@ GLint vertex_attribute(GLint program, const char * name, GLint fields, GLsizei s
 		printf("Cannot have more than 4 fields. Was given %i.\n", fields);
 
 		last_error = attrib;
-		last_name = name;
+		last_name = (char*)name;
 
 		return -1;
 	}
@@ -72,7 +72,7 @@ GLint vertex_attribute(GLint program, const char * name, GLint fields, GLsizei s
 		printf("Could not find attribute %s position.\n", name);
 
 		last_error = attrib;
-		last_name = name;
+		last_name = (char*)name;
 
 		return -1;
 	}
@@ -86,3 +86,60 @@ GLint vertex_attribute(GLint program, const char * name, GLint fields, GLsizei s
 	return attrib;
 }
 
+int last_error_uniform;
+const char * last_name_uniform;
+
+GLint uniform_float(GLint program, const char * name, float value)
+{
+	GLint uniform = glGetUniformLocation(program, name);
+	if (uniform == -1 && last_error_uniform != uniform && last_name_uniform != name)
+	{
+		printf("Could not find uniform %s position.\n", name);
+		
+		last_error_uniform = uniform;
+		last_name_uniform = name;
+
+		return -1;
+	}
+
+	glUniform1f(uniform, value);
+
+	return uniform;
+}
+
+GLint uniform_mat4(GLint program, const char * name, GLsizei count, GLboolean transpose, const GLfloat * value)
+{
+	GLint uniform = glGetUniformLocation(program, name);
+	if (uniform == -1)
+	{
+		printf("Could not find uniform %s position.\n", name);
+		return -1;
+	}
+
+	glUniformMatrix4fv(uniform, count, transpose, value);
+
+	return uniform;
+}
+
+float * mat4x4_to_array(mat4x4 matrix)
+{
+	float * arr = new float[16]
+	{
+		matrix.a, matrix.b, matrix.c, matrix.d,
+		matrix.e, matrix.f, matrix.g, matrix.h,
+		matrix.i, matrix.j, matrix.k, matrix.l,
+		matrix.m, matrix.n, matrix.o, matrix.p,
+	};
+
+	return &arr[0];
+}
+
+mat4x4 get_identity()
+{
+	mat4x4 matrix = mat4x4(1.0f, 0.0f, 0.0f, 0.0f,
+						   0.0f, 1.0f, 0.0f, 0.0f,
+					   	   0.0f, 0.0f, 1.0f, 0.0f,
+						   0.0f, 0.0f, 0.0f, 1.0f);
+
+	return matrix;	
+}

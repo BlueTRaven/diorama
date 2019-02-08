@@ -1,4 +1,2 @@
-﻿  diorama.cpp
-  shader.cpp
-  Generating Code...
+﻿  vertex_handler.cpp
   diorama.vcxproj -> C:\Users\Taylor\Documents\Programming\C++\diorama\x64\Debug\diorama.exe

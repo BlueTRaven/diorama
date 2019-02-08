@@ -3,6 +3,8 @@
 
 #include "diorama.h"
 #include "vertex_handler.h"
+#include <stdio.h>
+using namespace std;
 
 void update()
 {
@@ -35,6 +37,11 @@ void draw(GLint program)
 	GLint attrib_position = vertex_attribute(program, "position", 3, sizeof(Vertex), (void*)0);
 	GLint attrib_tex_coord = vertex_attribute(program, "tex_coord", 2, sizeof(Vertex), (void*)offsetof(Vertex, tex_coords));
 	GLint attrib_color = vertex_attribute(program, "color", 4, sizeof(Vertex), (void*)offsetof(Vertex, color));
+
+	mat4x4 matrix = get_identity();
+	float * arr = mat4x4_to_array(matrix);
+
+	uniform_mat4(program, "projection", 1, false, arr); 
 
 	glDrawArrays(GL_TRIANGLES, 0, 3);
 
