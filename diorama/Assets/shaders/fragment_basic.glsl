@@ -1,7 +1,12 @@
 #version 330 core
 out vec4 color;
 
+in vec3 frag_position;
+in vec4 frag_color;
+in vec2 frag_tex_coord;
+
 void main()
 {
-	color = vec4(0.0, 0.5, 0.5, 1.0);
+	color.rgb = abs(frag_position);
+//	color = frag_color;
 }

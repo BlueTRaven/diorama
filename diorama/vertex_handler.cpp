@@ -7,6 +7,9 @@
 
 using namespace std;
 
+GLuint vertex_array;
+GLuint vertex_buffer;
+
 //size of vertex allocation, in byte
 const int NUM_VERTEX_ALLOCATED = 3;	//only 3 for now to test one triangle
 const int VERTEX_ALLOC_SIZE = NUM_VERTEX_ALLOCATED * sizeof(Vertex);
@@ -14,9 +17,6 @@ const int VERTEX_ALLOC_SIZE = NUM_VERTEX_ALLOCATED * sizeof(Vertex);
 Vertex vertices[NUM_VERTEX_ALLOCATED];
 
 static size_t last_allocated;
-
-GLuint vertex_array;
-GLuint vertex_buffer;
 
 void init_vertex_buffers()
 {

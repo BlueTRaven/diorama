@@ -1,5 +1,11 @@
 #pragma once
 
+#include <glad\glad.h>
+#include <GLFW\glfw3.h>
+
+GLuint vertex_array;
+GLuint vertex_buffer;
+
 struct vec2
 {
 	float x, y;
@@ -64,7 +70,14 @@ struct Vertex
 	vec4 color;
 
 	//data is as such: 1.0f, 1.0f, 0.0f (pos), 0.0f, 0.0f (tex_coords), 1.0f, 1.0f, 1.0f, 1.0f (color)
-	
+
+	Vertex()
+	{
+		position = vec3();
+		tex_coords = vec2();
+		color = vec4();
+	}	
+
 	Vertex(vec3 _position)
 	{
 		position = _position;
