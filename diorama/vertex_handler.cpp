@@ -30,15 +30,15 @@ void init_vertex_buffers()
 	//this is here for testing purposes
 	vertices[0] = Vertex();
 	vertices[0].position = vec3(-1.0f, 1.0f, 1.0f);
-	vertices[0].color = vec4(1.0f, 1.0f, 1.0f, 1.0f);
+	vertices[0].color = vec4(1.0f, 0.0f, 0.0f, 1.0f);
 
 	vertices[1] = Vertex();
 	vertices[1].position = vec3(0.0f, -1.0f, 0.0f);
-	vertices[1].color = vec4(1.0f, 1.0f, 1.0f, 1.0f);
+	vertices[1].color = vec4(0.0f, 1.0f, 0.0f, 1.0f);
 
 	vertices[2] = Vertex();
 	vertices[2].position = vec3(1.0f, 1.0f, 0.0f);
-	vertices[2].color = vec4(1.0f, 1.0f, 1.0f, 1.0f);
+	vertices[2].color = vec4(0.0f, 0.0f, 1.0f, 1.0f);
 	
 	glBufferSubData(GL_ARRAY_BUFFER, 0, VERTEX_ALLOC_SIZE, &vertices); 
 }

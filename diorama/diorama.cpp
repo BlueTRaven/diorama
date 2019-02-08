@@ -32,6 +32,10 @@ void draw(GLint program)
 
 	glBindBuffer(GL_ARRAY_BUFFER, vertex_buffer);
 	
+	//GLint attrib_position = glGetAttribLocation(program, "position");
+	//GLint attrib_tex_coord = glGetAttribLocation(program, "tex_coord");
+	//GLint attrib_color = glGetAttribLocation(program, "color");
+
 	glEnableVertexAttribArray(0);
 	glEnableVertexAttribArray(1);
 	glEnableVertexAttribArray(2);
