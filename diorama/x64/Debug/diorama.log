@@ -1,5 +1,5 @@
-﻿  diorama.cpp
-  main.cpp
-  vertex_handler.cpp
-  Generating Code...
+﻿  vertex_handler.cpp
+c:\users\taylor\documents\programming\c++\diorama\diorama\vertex_handler.cpp(65): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+c:\users\taylor\documents\programming\c++\diorama\diorama\vertex_handler.cpp(87): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
+c:\users\taylor\documents\programming\c++\diorama\diorama\vertex_handler.cpp(99): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
   diorama.vcxproj -> C:\Users\Taylor\Documents\Programming\C++\diorama\x64\Debug\diorama.exe

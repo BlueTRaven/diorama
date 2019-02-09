@@ -1,0 +1,66 @@
+#include "gamemath.h"
+
+#include <math.h>
+
+mat4x4 * get_identity()
+{
+	mat4x4 * matrix = new mat4x4(1.0f, 0.0f, 0.0f, 0.0f,
+						   0.0f, 1.0f, 0.0f, 0.0f,
+					   	   0.0f, 0.0f, 1.0f, 0.0f,
+						   0.0f, 0.0f, 0.0f, 1.0f);
+
+	return matrix;	
+}
+
+mat4x4 * get_perspective(float width, float height, float z_near, float z_far, float fov)
+{
+	const float ar = width / height;
+	const float z_range = z_near - z_far;
+	const float half_fov = (float)tan(fov / 2.0f);
+
+	mat4x4 * matrix = new mat4x4();
+
+	matrix->arr[0] = 1.0f / (half_fov * ar);
+	matrix->arr[1] = 0.0f;
+	matrix->arr[2] = 0.0f;
+	matrix->arr[3] = 0.0f;
+
+	matrix->arr[4] = 0.0f;
+	matrix->arr[5] = 1.0f / half_fov;
+	matrix->arr[6] = 0.0f;
+	matrix->arr[7] = 0.0f;
+
+	matrix->arr[8] = 0.0f;
+	matrix->arr[9] = 0.0f;
+	matrix->arr[10] = (-z_near - z_far) / z_range;
+	matrix->arr[11] = 2.0f * z_far * z_near / z_range;
+
+	matrix->arr[12] = 0.0f;
+	matrix->arr[13] = 0.0f;
+	matrix->arr[14] = 1.0f;
+	matrix->arr[15] = 0.0f;		
+	
+	return matrix;
+}
+
+vec3 mat4x4_vec3_mult(vec3 vector, mat4x4 matrix)
+{
+	vec3 f = vec3(0.0f, 0.0f, 0.0f);
+
+	f.x = matrix.arr[0] * vector.x + matrix.arr[1] * vector.y + matrix.arr[2] * vector.z + matrix.arr[3] * 1;
+	f.y = matrix.arr[4] * vector.x + matrix.arr[5] * vector.y + matrix.arr[6] * vector.z + matrix.arr[7] * 1;
+	f.z = matrix.arr[8] * vector.x + matrix.arr[9] * vector.y + matrix.arr[10] * vector.z + matrix.arr[11] * 1;
+	//NOOP for last point since we don't need it
+
+	return f;
+}
+
+float rad_to_deg(float radians)
+{
+	return radians * 57.2958f;
+}
+
+float deg_to_rad(float degrees)
+{
+	return degrees * 0.0174533f;
+}

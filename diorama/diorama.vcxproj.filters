@@ -35,6 +35,12 @@
     <ClCompile Include="vertex_handler.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="gamemath.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="entity.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="main.h">
@@ -56,6 +62,12 @@
       <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="vertex_handler.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="gamemath.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="entity.h">
       <Filter>Source Files</Filter>
     </ClInclude>
   </ItemGroup>

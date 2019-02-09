@@ -3,6 +3,8 @@
 
 #include "diorama.h"
 #include "vertex_handler.h"
+#include "gamemath.h"
+
 #include <stdio.h>
 using namespace std;
 
@@ -32,23 +34,19 @@ void draw(GLint program)
 
 	glUseProgram(program);
 
-	glBindBuffer(GL_ARRAY_BUFFER, vertex_buffer);
+	glBindBuffer(GL_ARRAY_BUFFER, vertex_arrays[0]->vert_buffer);
 
 	GLint attrib_position = vertex_attribute(program, "position", 3, sizeof(Vertex), (void*)0);
 	GLint attrib_tex_coord = vertex_attribute(program, "tex_coord", 2, sizeof(Vertex), (void*)offsetof(Vertex, tex_coords));
 	GLint attrib_color = vertex_attribute(program, "color", 4, sizeof(Vertex), (void*)offsetof(Vertex, color));
 
-	mat4x4 matrix = get_identity();
-	float * arr = mat4x4_to_array(matrix);
+	mat4x4 * matrix = get_identity(); //get_perspective(width, height, 1.0f, 1000.0f, 30.0f);
 
-	for (int i = 0; i < 4; i++)
-	{
-		printf("%i = %f\n", i, *(arr + i));
-	}	
+	uniform_mat4(program, "projection", 1, false, matrix->m); 
 
-	uniform_mat4(program, "projection", 1, false, arr); 
-
-	glDrawArrays(GL_TRIANGLES, 0, 3);
+	for (int i = 0; i < vertex_arrays[0]->datas.size(); i++)
+		glDrawArrays(GL_TRIANGLES, vertex_arrays[0]->datas[i].start, vertex_arrays[0]->datas[i].start - vertex_arrays[0]->datas[i].end);
+	//glDrawArrays(GL_TRIANGLES, 0, 3);
 
  	glDisableVertexAttribArray(attrib_position);
 	glDisableVertexAttribArray(attrib_tex_coord);

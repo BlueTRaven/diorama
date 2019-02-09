@@ -1,4 +1,5 @@
 #include "vertex_handler.h"
+#include "gamemath.h"
 
 #include <glad\glad.h>
 #include <GLFW\glfw3.h>
@@ -7,47 +8,104 @@
 
 using namespace std;
 
-GLuint vertex_array;
-GLuint vertex_buffer;
+vector<vertex_array*> vertex_arrays; 
 
-//size of vertex allocation, in byte
-const int NUM_VERTEX_ALLOCATED = 3;	//only 3 for now to test one triangle
-const int VERTEX_ALLOC_SIZE = NUM_VERTEX_ALLOCATED * sizeof(Vertex);
-
-Vertex vertices[NUM_VERTEX_ALLOCATED];
-
-static size_t last_allocated;
+static int last_allocated;
 
 void init_vertex_buffers()
 {
-	glGenVertexArrays(1, &vertex_array);
+	int total_arrays = 1;
+
+	vertex_arrays = vector<vertex_array*>();
+
+	for (int i = 0; i < total_arrays; i++)
+	{
+		vertex_array * arr = new vertex_array();	//TODO to new
+
+		glGenVertexArrays(i + 1, &arr->vert_array);
+		glBindVertexArray(arr->vert_array);
+
+		glGenBuffers(i + 1, &arr->vert_buffer);
+		glBindBuffer(GL_ARRAY_BUFFER, arr->vert_buffer);
+		glBufferData(GL_ARRAY_BUFFER, VERTEX_ALLOC_SIZE, arr->vertices, GL_STATIC_DRAW);
+
+		vertex_arrays.push_back(arr);
+	}
+/*	glGenVertexArrays(1, &vertex_array);
 	glBindVertexArray(vertex_array);
 
 	glGenBuffers(1, &vertex_buffer);
 	glBindBuffer(GL_ARRAY_BUFFER, vertex_buffer);
-	glBufferData(GL_ARRAY_BUFFER, VERTEX_ALLOC_SIZE, vertices, GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, VERTEX_ALLOC_SIZE, vertices, GL_STATIC_DRAW);*/
 
 	//this is here for testing purposes
-	vertices[0] = Vertex();
-	vertices[0].position = vec3(-1.0f, 1.0f, 1.0f);
+/*	vertices[0] = Vertex();
+	vertices[0].position = vec3(-1.0f, 1.0f, -8.0f);
 	vertices[0].color = vec4(1.0f, 0.0f, 0.0f, 1.0f);
 
 	vertices[1] = Vertex();
-	vertices[1].position = vec3(0.0f, -1.0f, 0.0f);
+	vertices[1].position = vec3(0.0f, -1.0f, -8.0f);
 	vertices[1].color = vec4(0.0f, 1.0f, 0.0f, 1.0f);
 
 	vertices[2] = Vertex();
-	vertices[2].position = vec3(1.0f, 1.0f, 0.0f);
+	vertices[2].position = vec3(1.0f, 1.0f, -8.0f);
 	vertices[2].color = vec4(0.0f, 0.0f, 1.0f, 1.0f);
 	
-	glBufferSubData(GL_ARRAY_BUFFER, 0, VERTEX_ALLOC_SIZE, &vertices); 
+	glBufferSubData(GL_ARRAY_BUFFER, 0, VERTEX_ALLOC_SIZE, &vertices);*/
+
+	vector<Vertex> vertices = vector<Vertex>();
+	vertices.push_back(Vertex(vec3(-1.0f, 1.0f, -8.0f), vec2(0.0f, 0.0f), vec4(1.0f, 0.0f, 0.0f, 1.0f)));
+	vertices.push_back(Vertex(vec3(0.0f, -1.0f, -8.0f), vec2(0.0f, 0.0f), vec4(1.0f, 0.0f, 0.0f, 1.0f)));
+	vertices.push_back(Vertex(vec3(1.0f, 1.0f, -8.0f), vec2(0.0f, 0.0f), vec4(1.0f, 0.0f, 0.0f, 1.0f)));
+	add_vertices(vertices, 0);
 }
 
-void add_vertex(Vertex vertex)
+vertex_data *add_vertices(vector<Vertex> add_vertices, int to_array)
 {
-	last_allocated++;
+	int end = last_allocated + add_vertices.size();
+	while(true)
+	{
+		if (last_allocated > MAX_VERTEX)
+			last_allocated = 0;
 
-	vertices[last_allocated] = vertex;
+		bool valid = true;
+
+		for (int i = last_allocated; i < end; i++)
+		{
+			if (vertex_arrays[to_array]->vertices[i].valid) 
+			{	
+				valid = false;
+				break;
+			}
+		}
+
+		if (valid) break;
+
+		//TODO break out of potential infinite loop here	
+		last_allocated++;
+
+		end = last_allocated + add_vertices.size();
+	}
+
+	//if we get to this point, it means we've found a place for this.
+	for (int i = last_allocated; i < end; i++)
+		vertex_arrays[to_array]->vertices[i] = add_vertices[i - last_allocated];
+
+	vertex_data * ret = new vertex_data();
+	ret->arr = to_array;
+	ret->start = last_allocated;
+	ret->size = last_allocated - end;
+
+	ret->datas_index = vertex_arrays[to_array]->datas.size();
+
+	vertex_arrays[to_array]->datas.push_back(*ret);
+
+	glBindVertexArray(vertex_arrays[to_array]->vert_array);
+	glBindBuffer(GL_ARRAY_BUFFER, vertex_arrays[to_array]->vert_buffer);
+//	glBufferSubData(GL_ARRAY_BUFFER, ret->start, ret->end - ret->start, &vertex_arrays[to_array]->vertices);
+	glBufferSubData(GL_ARRAY_BUFFER, 0, VERTEX_ALLOC_SIZE, &vertex_arrays[to_array]->vertices);
+
+	return ret;
 }
 
 int last_error = 0;
@@ -121,25 +179,3 @@ GLint uniform_mat4(GLint program, const char * name, GLsizei count, GLboolean tr
 	return uniform;
 }
 
-float * mat4x4_to_array(mat4x4 matrix)
-{
-	float * arr = new float[16]
-	{
-		matrix.a, matrix.b, matrix.c, matrix.d,
-		matrix.e, matrix.f, matrix.g, matrix.h,
-		matrix.i, matrix.j, matrix.k, matrix.l,
-		matrix.m, matrix.n, matrix.o, matrix.p,
-	};
-
-	return &arr[0];
-}
-
-mat4x4 get_identity()
-{
-	mat4x4 matrix = mat4x4(1.0f, 0.0f, 0.0f, 0.0f,
-						   0.0f, 1.0f, 0.0f, 0.0f,
-					   	   0.0f, 0.0f, 1.0f, 0.0f,
-						   0.0f, 0.0f, 0.0f, 1.0f);
-
-	return matrix;	
-}

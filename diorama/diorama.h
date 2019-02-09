@@ -2,11 +2,12 @@
 
 #include "vertex_handler.h"
 
+#include <vector>
+
 #include <glad\glad.h>
 #include <GLFW\glfw3.h>
 
-extern GLuint vertex_array;
-extern GLuint vertex_buffer;
+extern std::vector<vertex_array*> vertex_arrays;
 
 void draw(GLint program);
 
