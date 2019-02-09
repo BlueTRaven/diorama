@@ -81,12 +81,16 @@ struct Vertex
 	}
 };
 
-struct mat4x4
+union mat4x4
 {
-	float a, b, c, d,
-		  e, f, g, h,
-		  i, j, k, l,
-		  m, n, o, p;
+	struct  
+	{
+		float a, b, c, d,
+			  e, f, g, h,
+			  i, j, k, l,
+			  m, n, o, p;
+	};
+	float arr[4][4];
 
 	mat4x4()
 	{
@@ -104,13 +108,13 @@ struct mat4x4
 		j = 0;
 		k = 0;
 		l = 0;
-
+	
 		m = 0;
 		n = 0;
 		o = 0;
 		p = 0;			
 	}
-
+	
 	mat4x4(float _a, float _b, float _c, float _d, 
 		   float _e, float _f, float _g, float _h, 
 		   float _i, float _j, float _k, float _l, 
