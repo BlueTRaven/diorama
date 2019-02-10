@@ -32,27 +32,6 @@ void init_vertex_buffers()
 
 		vertex_arrays.push_back(arr);
 	}
-/*	glGenVertexArrays(1, &vertex_array);
-	glBindVertexArray(vertex_array);
-
-	glGenBuffers(1, &vertex_buffer);
-	glBindBuffer(GL_ARRAY_BUFFER, vertex_buffer);
-	glBufferData(GL_ARRAY_BUFFER, VERTEX_ALLOC_SIZE, vertices, GL_STATIC_DRAW);*/
-
-	//this is here for testing purposes
-/*	vertices[0] = Vertex();
-	vertices[0].position = vec3(-1.0f, 1.0f, -8.0f);
-	vertices[0].color = vec4(1.0f, 0.0f, 0.0f, 1.0f);
-
-	vertices[1] = Vertex();
-	vertices[1].position = vec3(0.0f, -1.0f, -8.0f);
-	vertices[1].color = vec4(0.0f, 1.0f, 0.0f, 1.0f);
-
-	vertices[2] = Vertex();
-	vertices[2].position = vec3(1.0f, 1.0f, -8.0f);
-	vertices[2].color = vec4(0.0f, 0.0f, 1.0f, 1.0f);
-	
-	glBufferSubData(GL_ARRAY_BUFFER, 0, VERTEX_ALLOC_SIZE, &vertices);*/
 
 	vector<Vertex> vertices = vector<Vertex>();
 	vertices.push_back(Vertex(vec3(-1.0f, 1.0f, -8.0f), vec2(0.0f, 0.0f), vec4(1.0f, 0.0f, 0.0f, 1.0f)));
@@ -73,17 +52,11 @@ vertex_data *add_vertices(vector<Vertex> add_vertices, int to_array)
 
 		for (int i = last_allocated; i < end; i++)
 		{
-			Vertex *vert = vertex_arrays[to_array]->vertices;
-			if (vert->position.x != 0 || vert->position.y != 0 || vert->position.z != 0)
-			{
-				valid = false;
-				break;
-			}
-			/*if (vertex_arrays[to_array]->vertices[i].valid) 
+			if (vertex_arrays[to_array]->vertices[i].valid) 
 			{	
 				valid = false;
 				break;
-			}*/
+			}
 		}
 
 		if (valid) break;

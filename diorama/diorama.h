@@ -11,6 +11,12 @@ extern std::vector<vertex_array*> vertex_arrays;
 
 extern GLint program_general;
 
+static bool draw_wireframe;
+
+void diorama_init();
+
+void init_entities();
+
 void draw();
 void draw_world(int width, int height, float ratio);
 

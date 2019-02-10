@@ -63,13 +63,15 @@ struct Vertex
 	vec2 tex_coords;
 	vec4 color;
 
-	//bool valid;
+	bool valid;
 
 	Vertex()
 	{
 		position = vec3();
 		tex_coords = vec2();
 		color = vec4();
+
+		valid = false;
 	}	
 
 	Vertex(vec3 _position)

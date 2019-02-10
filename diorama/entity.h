@@ -16,12 +16,13 @@ struct entity
 	virtual void draw(entity *e) { }
 };
 
-struct cube : entity 
+struct cube : entity
 {
-	Vertex *vertices;
+	vertex_data *vertex_data;
 
-	void init(entity *e) 
-	{
+	virtual void init(entity *e) override;
 
-	}
+	virtual void update(entity *e) override;
+
+	virtual	void draw(entity *e) override;	
 };

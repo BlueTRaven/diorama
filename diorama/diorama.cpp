@@ -5,9 +5,27 @@
 #include "vertex_handler.h"
 #include "gamemath.h"
 #include "logging.h"
+#include "entity.h"
 
 #include <stdio.h>
 using namespace std;
+
+vector<entity*> entities;
+
+void diorama_init()
+{
+	entities.push_back(new cube());
+
+	init_entities();
+}
+
+void init_entities()
+{
+	for (int i = 0; i < entities.size(); i++)
+	{
+		entities[i]->init(entities[i]);
+	}
+}
 
 void update()
 {
@@ -53,11 +71,14 @@ void draw_world(int width, int height, float ratio)
 	uniform_mat4(program_general, "projection", 1, false, matrix->m); 
 
 	for (int i = 0; i < vertex_arrays[0]->datas.size(); i++)
-		glDrawArrays(GL_TRIANGLES, vertex_arrays[0]->datas[i].start, vertex_arrays[0]->datas[i].size); 
+	{
+		vector<vertex_data> datas = vertex_arrays[0]->datas;
+		if (draw_wireframe)
+			glDrawArrays(GL_LINE_STRIP, datas[i].start, datas[i].size); 
+		else glDrawArrays(GL_TRIANGLES, datas[i].start, datas[i].size); 
+	}
 
 	disable_vertex_attribute(attrib_position);
 	disable_vertex_attribute(attrib_tex_coord);
 	disable_vertex_attribute(attrib_color);
-
-	printf_glerrors();
 }

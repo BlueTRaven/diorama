@@ -9,19 +9,20 @@ struct entity
 	vec3 scale;
 	vec3 rotation;
 
-	virtual void init(entity *e) { }
+	virtual void init(entity *e);
 
-	virtual void update(entity *e) { }
+	virtual void update(entity *e);
 
-	virtual void draw(entity *e) { }
+	virtual void draw(entity *e);
 };
 
-struct cube : entity 
+struct cube : entity
 {
-	Vertex *vertices;
+	vertex_data *vertex_data;
 
-	void init(entity *e) 
-	{
+	virtual void init(entity *e) override;
 
-	}
-}
+	virtual void update(entity *e) override;
+
+	virtual	void draw(entity *e) override;	
+};

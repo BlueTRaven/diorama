@@ -1,0 +1,27 @@
+#include <vector>
+
+#include "vertex_handler.h"
+#include "gamemath.h"
+#include "entity.h"
+
+void cube::init(entity *e) 
+{
+	std::vector<Vertex> vertices;
+	vertices.push_back(Vertex(vec3(0.0f, 0.0f, -4.0f), vec2(0.0f, 0.0f), vec4(1.0f, 0.0f, 0.0f, 1.0f)));
+	vertices.push_back(Vertex(vec3(1.0f, 0.0f, -4.0f), vec2(0.0f, 0.0f), vec4(0.0f, 1.0f, 0.0f, 1.0f)));
+	vertices.push_back(Vertex(vec3(0.0f, -1.0f, -4.0f), vec2(0.0f, 0.0f), vec4(0.0f, 1.0f, 0.0f, 1.0f)));
+
+	vertices.push_back(Vertex(vec3(1.0f, 0.0f, -4.0f), vec2(0.0f, 0.0f), vec4(0.0f, 1.0f, 0.0f, 1.0f)));
+	vertices.push_back(Vertex(vec3(1.0f, -1.0f, -4.0f), vec2(0.0f, 0.0f), vec4(0.0f, 0.0f, 1.0f, 1.0f)));
+	vertices.push_back(Vertex(vec3(0.0f, -1.0f, -4.0f), vec2(0.0f, 0.0f), vec4(0.0f, 1.0f, 0.0f, 1.0f)));
+	
+ 	vertex_data = add_vertices(vertices, 0);
+}
+
+void cube::update(entity *e)
+{
+}
+
+void cube::draw(entity *e)
+{
+}
