@@ -14,7 +14,7 @@ struct vertex_data
 	int arr;	//opengl array pointer
 	int datas_index;	//index in array.datas where we are
 	int start;	//start offset in the array
-	int end;	//size, in vertices
+	int size;	//size, in vertices
 };
 
 struct vertex_array

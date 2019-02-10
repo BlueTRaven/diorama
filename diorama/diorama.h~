@@ -2,10 +2,17 @@
 
 #include "vertex_handler.h"
 
+#include <vector>
+
 #include <glad\glad.h>
 #include <GLFW\glfw3.h>
 
-void draw(GLint program);
+extern std::vector<vertex_array*> vertex_arrays;
+
+extern program_general;
+
+void draw();
+void draw_world();
 
 void update_input();
 

@@ -39,6 +39,8 @@ vertex_data *add_vertices(std::vector<Vertex> add_vertices, int to_array);
 
 GLint vertex_attribute(GLint program, const char * name, GLint fields, GLsizei size, void * offset);
 
+void disable_vertex_attribute(GLint attribute);
+
 GLint uniform_float(GLint program, const char * name, float value);
 
 GLint uniform_mat4(GLint program, const char * name, GLsizei count, GLboolean transpose, const GLfloat * value);

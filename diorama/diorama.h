@@ -9,7 +9,10 @@
 
 extern std::vector<vertex_array*> vertex_arrays;
 
-void draw(GLint program);
+extern GLint program_general;
+
+void draw();
+void draw_world(int width, int height, float ratio);
 
 void update_input();
 

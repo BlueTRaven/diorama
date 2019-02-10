@@ -63,7 +63,7 @@ struct Vertex
 	vec2 tex_coords;
 	vec4 color;
 
-	bool valid;
+	//bool valid;
 
 	Vertex()
 	{

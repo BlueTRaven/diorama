@@ -109,7 +109,7 @@ void link_all_shaders(GLuint program)
 
 	compiled_shaders = false;
 
-	printf("Finished linking shaders to program %X.", program);
+	printf("Finished linking shaders to program at 0x%X.\n", program);
 }
 
 GLint compile_shader(GLenum type, string filename)

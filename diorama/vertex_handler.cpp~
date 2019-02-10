@@ -1,5 +1,6 @@
 #include "vertex_handler.h"
 #include "gamemath.h"
+#include "logging.h"
 
 #include <glad\glad.h>
 #include <GLFW\glfw3.h>
@@ -55,8 +56,8 @@ void init_vertex_buffers()
 
 	vector<Vertex> vertices = vector<Vertex>();
 	vertices.push_back(Vertex(vec3(-1.0f, 1.0f, -8.0f), vec2(0.0f, 0.0f), vec4(1.0f, 0.0f, 0.0f, 1.0f)));
-	vertices.push_back(Vertex(vec3(0.0f, -1.0f, -8.0f), vec2(0.0f, 0.0f), vec4(1.0f, 0.0f, 0.0f, 1.0f)));
 	vertices.push_back(Vertex(vec3(1.0f, 1.0f, -8.0f), vec2(0.0f, 0.0f), vec4(1.0f, 0.0f, 0.0f, 1.0f)));
+	vertices.push_back(Vertex(vec3(0.0f, 1.0f, -8.0f), vec2(0.0f, 0.0f), vec4(1.0f, 0.0f, 0.0f, 1.0f)));
 	add_vertices(vertices, 0);
 }
 
@@ -72,11 +73,17 @@ vertex_data *add_vertices(vector<Vertex> add_vertices, int to_array)
 
 		for (int i = last_allocated; i < end; i++)
 		{
-			if (vertex_arrays[to_array]->vertices[i].valid) 
-			{	
+			Vertex *vert = vertex_arrays[to_array]->vertices;
+			if (vert->position.x != 0 || vert->position.y != 0 || vert->position.z != 0)
+			{
 				valid = false;
 				break;
 			}
+			/*if (vertex_arrays[to_array]->vertices[i].valid) 
+			{	
+				valid = false;
+				break;
+			}*/
 		}
 
 		if (valid) break;
@@ -94,7 +101,7 @@ vertex_data *add_vertices(vector<Vertex> add_vertices, int to_array)
 	vertex_data * ret = new vertex_data();
 	ret->arr = to_array;
 	ret->start = last_allocated;
-	ret->size = last_allocated - end;
+	ret->size = add_vertices.size(); 
 
 	ret->datas_index = vertex_arrays[to_array]->datas.size();
 
@@ -114,10 +121,11 @@ const char * last_name;
 GLint vertex_attribute(GLint program, const char * name, GLint fields, GLsizei size, void * offset)
 {
 	GLint attrib = glGetAttribLocation(program, name);
-	
-	if (fields > 4 && last_error != attrib && last_name != name)
+
+	if (fields > 4)
 	{
-		printf("Cannot have more than 4 fields. Was given %i.\n", fields);
+		if (last_error != attrib && last_name != name)
+			printf("Cannot have more than 4 fields. Was given %i.\n", fields);
 
 		last_error = attrib;
 		last_name = (char*)name;
@@ -125,9 +133,10 @@ GLint vertex_attribute(GLint program, const char * name, GLint fields, GLsizei s
 		return -1;
 	}
 
-	if (attrib == -1 && last_error != attrib && last_name != name)
+	if (attrib == -1) 
 	{
-		printf("Could not find attribute %s position.\n", name);
+		if (last_error != attrib && last_name != name)
+			printf("Could not find attribute %s position.\n", name);
 
 		last_error = attrib;
 		last_name = (char*)name;
@@ -177,5 +186,11 @@ GLint uniform_mat4(GLint program, const char * name, GLsizei count, GLboolean tr
 	glUniformMatrix4fv(uniform, count, transpose, value);
 
 	return uniform;
+}
+
+void disable_vertex_attribute(GLint attribute)
+{
+	if (attribute > 0)
+		glDisableVertexAttribArray(attribute);
 }
 
