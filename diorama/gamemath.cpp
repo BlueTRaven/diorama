@@ -144,6 +144,45 @@ mat4x4 mat4_transpose(mat4x4 matrix)
 	return out;
 }
 
+mat4x4 mat4_transpose_translate(mat4x4 matrix)
+{
+	mat4x4 out = mat4x4();
+
+	out.m[4] = matrix[1] * -1;
+	out.m[1] = matrix[4] * -1;
+
+	out.m[8] = matrix[2] * -1;
+	out.m[2] = matrix[8] * -1;
+
+	out.m[12] = matrix[3] * -1;
+	out.m[3] = matrix[12] * -1;
+
+	out.m[9] = matrix[6] * -1;
+	out.m[6] = matrix[9] * -1;
+
+	out.m[13] = matrix[7] * -1;
+	out.m[7] = matrix[13] * -1;
+
+	out.m[14] = matrix[11] * -1;
+	out.m[11] = matrix[14] * -1;
+
+	out.m[0] = matrix[0];
+	out.m[5] = matrix[5];
+	out.m[10] = matrix[10];
+	out.m[15] = matrix[15];
+
+	return out;
+}
+
+mat4x4 mat4x4::inverse()
+{
+	return mat4x4(
+			this->m[0] * -1, this->m[1] * -1, this->m[2] * -1, this->m[3] * -1,
+			this->m[4] * -1, this->m[5] * -1, this->m[6] * -1, this->m[7] * -1,
+			this->m[8] * -1, this->m[9] * -1, this->m[10] * -1, this->m[11] * -1,
+			this->m[12] * -1, this->m[13] * -1, this->m[14] * -1, this->m[15] * -1);
+}
+
 float rad_to_deg(float radians)
 {
 	return radians * 57.2958f;

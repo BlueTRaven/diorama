@@ -67,6 +67,8 @@ struct mat4x4
 
 		return out;	
 	}
+
+	mat4x4 inverse();
 };
 
 struct vec4
@@ -249,6 +251,8 @@ mat4x4 get_rotation(vec3 rotation);
 mat4x4 get_scale(vec3 scale);
 
 mat4x4 get_translation(vec3 translate);
+
+mat4x4 mat4_transpose_translate(mat4x4 matrix);
 
 mat4x4 mat4_transpose(mat4x4 matrix);
 

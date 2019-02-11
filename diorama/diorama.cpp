@@ -140,10 +140,10 @@ void draw_world(int width, int height, float ratio)
 
 	mat4x4 matrix = get_perspective(width, height, 1.0f, 10000.0f, 90.0f);
 
- 	mat4x4 camera = mat4_transpose(get_rotation(transform_camera->rotation) * get_translation(transform_camera->position));
+ 	mat4x4 camera = get_rotation(transform_camera->rotation) * get_translation(transform_camera->position);
 
 	uniform_mat4(program_general, "projection", 1, false, matrix.m); 
-	uniform_mat4(program_general, "camera", 1, false, camera.m); 
+	uniform_mat4(program_general, "camera", 1, true, camera.m); 
 
 	for (int i = 0; i < vertex_arrays[0]->datas.size(); i++)
 	{

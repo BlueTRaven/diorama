@@ -158,6 +158,11 @@ struct vec3
 	{
 		return *this + add;
 	}
+
+	vec3 operator-=(const vec3 sub)
+	{
+		return *this - sub;
+	}
 };
 
 struct vec2
@@ -244,6 +249,8 @@ mat4x4 get_rotation(vec3 rotation);
 mat4x4 get_scale(vec3 scale);
 
 mat4x4 get_translation(vec3 translate);
+
+mat4x4 mat4_transpose_translate(mat4x4 matrix);
 
 mat4x4 mat4_transpose(mat4x4 matrix);
 
