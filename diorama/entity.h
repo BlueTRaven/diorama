@@ -17,6 +17,8 @@ struct entity
 
 struct cube : entity
 {
+	bool rotate = false;
+
 	virtual void init() override;
 
 	virtual void update() override;

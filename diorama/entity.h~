@@ -8,15 +8,19 @@ struct entity
 	transform *trans;
 	vertex_data *vertices;
 
-	virtual void init() { }
+	entity(transform *transform);
 
-	virtual void update() { }
+	virtual void init();
 
-	virtual void draw() { }
+	virtual void update();
+
+	virtual void draw();
 };
 
 struct cube : entity
 {
+	bool rotate = false;
+
 	virtual void init() override;
 
 	virtual void update() override;

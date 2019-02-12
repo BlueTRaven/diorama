@@ -28,22 +28,18 @@ const int INPUT_NONE = 0;
 
 void diorama_init()
 {
-	entities.push_back(new cube());
-
 	transform_camera = new transform();
-	transform_camera->position = vec3(0.0f, 0.0f, 0.0f);
-	transform_camera->rotation = vec3(0.0f, 0.0f, 0.0f);
-	transform_camera->scale = vec3(1.0f, 1.0f, 1.0f);
 
-	init_entities();
-}
+	cube *ca = new cube();
+	cube *cb = new cube();
 
-void init_entities()
-{
-	for (int i = 0; i < entities.size(); i++)
-	{
-		entities[i]->init();
-	}
+	transform *transa = new transform();
+	transa->position = vec3(2.0f, 0.0f, 0.0f);
+
+	ca->rotate = true;
+	
+	create_entity(ca, new transform());
+	create_entity(cb, transa);
 }
 
 void update()
@@ -170,4 +166,15 @@ void draw_world(int width, int height, float ratio)
 	disable_vertex_attribute(attrib_position);
 	disable_vertex_attribute(attrib_tex_coord);
 	disable_vertex_attribute(attrib_color);
+}
+
+int create_entity(entity *ent, transform *trans)
+{
+	entities.push_back(ent);
+
+	ent->init();
+
+	ent->trans = trans;	
+
+	return entities.size() - 1;
 }

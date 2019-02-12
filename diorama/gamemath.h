@@ -250,6 +250,13 @@ struct transform
 	vec3 scale;
 	vec3 rotation;
 
+	transform()
+	{
+		position = vec3(0.0f);
+		scale = vec3(1.0f);
+		rotation = vec3(0.0f);
+	}
+
 	vec3 forward();
 
 	vec3 right();

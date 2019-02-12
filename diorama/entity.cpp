@@ -9,10 +9,6 @@
 
 void entity::init() 
 {
-	this->trans = new transform();
-	this->trans->position = vec3();
-	this->trans->scale = vec3(1.0f, 1.0f, 1.0f);
-	this->trans->rotation = vec3();
 }
 
 void entity::update() { }
@@ -69,7 +65,8 @@ void cube::init()
 
 void cube::update()
 {
-	this->trans->rotation.y++;
+	if (this->rotate)
+		this->trans->rotation.y++;
 }
 
 void cube::draw()
