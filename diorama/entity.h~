@@ -5,24 +5,21 @@
 
 struct entity
 {
-	vec3 position;
-	vec3 scale;
-	vec3 rotation;
+	transform *trans;
+	vertex_data *vertices;
 
-	virtual void init(entity *e);
+	virtual void init() { }
 
-	virtual void update(entity *e);
+	virtual void update() { }
 
-	virtual void draw(entity *e);
+	virtual void draw() { }
 };
 
 struct cube : entity
 {
-	vertex_data *vertex_data;
+	virtual void init() override;
 
-	virtual void init(entity *e) override;
+	virtual void update() override;
 
-	virtual void update(entity *e) override;
-
-	virtual	void draw(entity *e) override;	
+	virtual	void draw() override;	
 };

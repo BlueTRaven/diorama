@@ -77,10 +77,18 @@ struct vec4
 
 	vec4()
 	{
-		x = 0;
+		x = 0; 
 		y = 0;
-		z = 0;
+	   	z = 0; 
 		w = 0;
+	}
+
+	vec4(float val)
+	{
+		x = val;
+		y = val;
+		z = val;
+		w = val;
 	}
 
 	vec4(float _x, float _y, float _z, float _w)
@@ -113,8 +121,15 @@ struct vec3
 	vec3()
 	{
 		x = 0;
-		y = 0; 
+		y = 0;
 		z = 0;
+	}
+
+	vec3(float val)
+	{
+		x = val;
+		y = val;
+		z = val;
 	}
 
 	vec3(float _x, float _y, float _z)
@@ -177,6 +192,12 @@ struct vec2
 		y = 0;
 	}
 
+	vec2(float val)
+	{
+		x = val;
+		y = val;
+	}
+
 	vec2(float _x, float _y)
 	{
 		x = _x;
@@ -234,6 +255,8 @@ struct transform
 	vec3 right();
 
 	vec3 up();
+
+	mat4x4 matrix();	
 };
 
 mat4x4 get_identity();

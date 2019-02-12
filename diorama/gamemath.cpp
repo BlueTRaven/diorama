@@ -66,7 +66,7 @@ mat4x4 get_rotation_y(float degrees)
 	float cosf = (float)cos(radians);
 
 	mat4x4 matrix = mat4x4(
-			cosf, 0.0f, cosf, 0.0f,
+			cosf, 0.0f, sinf, 0.0f,
 			0.0f, 1.0f, 0.0f, 0.0f,
 			-sinf, 0.0f, cosf, 0.0f,
 			0.0f, 0.0f, 0.0f, 1.0f);
@@ -90,7 +90,11 @@ mat4x4 get_rotation_z(float degrees)
 
 mat4x4 get_rotation(vec3 rotation)
 {
-	return get_rotation_x(rotation.x) * get_rotation_y(rotation.y) * get_rotation_z(rotation.z);
+	mat4x4 x = get_rotation_x(rotation.x);
+	mat4x4 y = get_rotation_y(rotation.y);
+	mat4x4 z = get_rotation_z(rotation.z);
+
+	return x * y * z;
 }
 
 mat4x4 get_scale(vec3 scale)
@@ -204,15 +208,24 @@ vec3 vec3::normalized()
 	return vec3(this->x / len, this->y / len, this->z / len);
 }
 
+mat4x4 transform::matrix()
+{
+	mat4x4 scale = get_scale(this->scale);
+	mat4x4 rotate = get_rotation(this->rotation);
+	mat4x4 translate = get_translation(this->position);
+
+	return (scale * rotate) * translate; 
+}
+
 vec3 transform::forward()
 {
-	mat4x4 rotation = get_rotation_y(this->rotation.y);
+	mat4x4 rotation = mat4_transpose(get_rotation_y(this->rotation.y));
 	return (vec3(0.0f, 0.0f, 1.0f) * rotation).normalized();
 }
 
 vec3 transform::right()
 {
-	mat4x4 rotation = get_rotation_y(this->rotation.y);
+	mat4x4 rotation = mat4_transpose(get_rotation_y(this->rotation.y));
 	return (vec3(1.0f, 0.0f, 0.0f) * rotation).normalized();
 }
 

@@ -5,6 +5,8 @@
 
 GLint program_general;
 
+bool draw_wireframe;
+
 void game_loop();
 
 void error_callback(int error, const char* description);

@@ -52,7 +52,7 @@ vertex_data *add_vertices(vector<Vertex> add_vertices, int to_array)
 
 		for (int i = last_allocated; i < end; i++)
 		{
-			if (vertex_arrays[to_array]->vertices[i]->valid) 
+			if (vertex_arrays[to_array]->vertices[i].valid) 
 			{	
 				valid = false;
 				break;
@@ -165,5 +165,14 @@ void disable_vertex_attribute(GLint attribute)
 {
 	if (attribute > 0)
 		glDisableVertexAttribArray(attribute);
+}
+
+void draw_vertdata(vertex_data *data, transform *trans)
+{
+	uniform_mat4(program_general, "object", 1, true, trans->matrix().m); 		
+
+	if (draw_wireframe)
+		glDrawArrays(GL_LINE_STRIP, data->start, data->size);
+	else glDrawArrays(GL_TRIANGLES, data->start, data->size);
 }
 

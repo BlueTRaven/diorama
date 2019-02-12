@@ -44,6 +44,9 @@
     <ClCompile Include="logging.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="drawing.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="main.h">
@@ -74,6 +77,12 @@
       <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="logging.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="drawing.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="colors.h">
       <Filter>Source Files</Filter>
     </ClInclude>
   </ItemGroup>

@@ -42,13 +42,18 @@ void init_entities()
 {
 	for (int i = 0; i < entities.size(); i++)
 	{
-		entities[i]->init(entities[i]);
+		entities[i]->init();
 	}
 }
 
 void update()
 {
 	double time = glfwGetTime();
+
+	for (int i = 0; i < entities.size(); i++)
+	{
+		entities[i]->update();
+	}
 }
 
 void update_input()
@@ -99,6 +104,14 @@ void diorama_key(GLFWwindow *window, int key, int scancode, int action, int mods
 		check_keystate(keystate_q, action);	
 	if (key == GLFW_KEY_E)
 		check_keystate(keystate_e, action);	
+
+	if (key == GLFW_KEY_R)
+	{
+		transform_camera = new transform();
+		transform_camera->position = vec3(0.0f, 0.0f, 0.0f);
+		transform_camera->scale = vec3(1.0f, 1.0f, 1.0f);
+		transform_camera->rotation = vec3(0.0f, 0.0f, 0.0f);
+	}
 }
 
 void check_keystate(int &keystate, int action)
@@ -108,7 +121,7 @@ void check_keystate(int &keystate, int action)
 	else if (action == GLFW_RELEASE)
 		keystate = INPUT_RELEASE;
 }
-
+	
 void draw()
 {
 	GLFWwindow *window = glfwGetCurrentContext();
@@ -138,19 +151,20 @@ void draw_world(int width, int height, float ratio)
 	GLint attrib_tex_coord = vertex_attribute(program_general, "tex_coord", 2, sizeof(Vertex), (void*)offsetof(Vertex, tex_coords));
 	GLint attrib_color = vertex_attribute(program_general, "color", 4, sizeof(Vertex), (void*)offsetof(Vertex, color));
 
-	mat4x4 matrix = get_perspective(width, height, 1.0f, 10000.0f, 90.0f);
+	mat4x4 matrix = get_perspective(width, height, 1.0f, 10000.0f, 45.0f);
 
- 	mat4x4 camera = get_rotation(transform_camera->rotation) * get_translation(transform_camera->position);
+ 	mat4x4 camera = get_translation(transform_camera->position) * get_rotation(transform_camera->rotation) ;
 
 	uniform_mat4(program_general, "projection", 1, false, matrix.m); 
 	uniform_mat4(program_general, "camera", 1, true, camera.m); 
 
-	for (int i = 0; i < vertex_arrays[0]->datas.size(); i++)
+	glEnable(GL_CULL_FACE);
+	glFrontFace(GL_CW);
+	glCullFace(GL_BACK);
+
+	for (int i = 0; i < entities.size(); i++)
 	{
-		vector<vertex_data> datas = vertex_arrays[0]->datas;
-		if (draw_wireframe)
-			glDrawArrays(GL_LINE_STRIP, datas[i].start, datas[i].size); 
-		else glDrawArrays(GL_TRIANGLES, datas[i].start, datas[i].size); 
+		entities[i]->draw();
 	}
 
 	disable_vertex_attribute(attrib_position);

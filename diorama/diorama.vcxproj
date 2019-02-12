@@ -175,6 +175,7 @@
   <ItemGroup>
     <ClCompile Include="assets.cpp" />
     <ClCompile Include="diorama.cpp" />
+    <ClCompile Include="drawing.cpp" />
     <ClCompile Include="entity.cpp" />
     <ClCompile Include="gamemath.cpp" />
     <ClCompile Include="logging.cpp" />
@@ -187,7 +188,9 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="assets.h" />
+    <ClInclude Include="colors.h" />
     <ClInclude Include="diorama.h" />
+    <ClInclude Include="drawing.h" />
     <ClInclude Include="entity.h" />
     <ClInclude Include="gamemath.h" />
     <ClInclude Include="logging.h" />
