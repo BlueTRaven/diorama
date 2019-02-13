@@ -3,19 +3,19 @@ font_location fonts/sml.font;
 texture_location textures/fonts/sml.png;
 declend; #declend required to end a declaration now
 
-asset material player:
+asset texture player:
 location textures/player.png;
 #comment test. End of line is next
 declend;
 
-asset material dirt_01:
+asset texture dirt_01:
 location textures/dirt_01.png;
 walk_sound sounds/dirt_walk_01.wav;
 #reference other asset AssetSound in-code?
 destroy_sound; dirt_walk_01;
 declend;
 
-asset material grass_01:
+asset texture grass_01:
 location textures/grass_01.png;
 walk_sound sounds/grass_walk_01.wav;
 destroy_sound sounds/grass_walk_01.wav;
@@ -38,9 +38,9 @@ side_u grass_01;
 declend;
 
 asset vertex_shader vertex_basic:
-location shaders/vertex_basic.glsl;
+location Assets/shaders/vertex_basic.glsl;
 declend;
 
 asset fragment_shader fragment_basic:
-location shaders/fragment_basic.glsl;
+location Assets/shaders/fragment_basic.glsl;
 declend;

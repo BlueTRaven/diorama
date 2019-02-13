@@ -178,6 +178,7 @@
     <ClCompile Include="drawing.cpp" />
     <ClCompile Include="entity.cpp" />
     <ClCompile Include="gamemath.cpp" />
+    <ClCompile Include="gametexture.cpp" />
     <ClCompile Include="logging.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="glad.c" />
@@ -193,6 +194,7 @@
     <ClInclude Include="drawing.h" />
     <ClInclude Include="entity.h" />
     <ClInclude Include="gamemath.h" />
+    <ClInclude Include="gametexture.h" />
     <ClInclude Include="logging.h" />
     <ClInclude Include="main.h" />
     <ClInclude Include="shader.h" />

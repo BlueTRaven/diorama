@@ -148,36 +148,6 @@ mat4x4 mat4_transpose(mat4x4 matrix)
 	return out;
 }
 
-mat4x4 mat4_transpose_translate(mat4x4 matrix)
-{
-	mat4x4 out = mat4x4();
-
-	out.m[4] = matrix[1] * -1;
-	out.m[1] = matrix[4] * -1;
-
-	out.m[8] = matrix[2] * -1;
-	out.m[2] = matrix[8] * -1;
-
-	out.m[12] = matrix[3] * -1;
-	out.m[3] = matrix[12] * -1;
-
-	out.m[9] = matrix[6] * -1;
-	out.m[6] = matrix[9] * -1;
-
-	out.m[13] = matrix[7] * -1;
-	out.m[7] = matrix[13] * -1;
-
-	out.m[14] = matrix[11] * -1;
-	out.m[11] = matrix[14] * -1;
-
-	out.m[0] = matrix[0];
-	out.m[5] = matrix[5];
-	out.m[10] = matrix[10];
-	out.m[15] = matrix[15];
-
-	return out;
-}
-
 mat4x4 mat4x4::inverse()
 {
 	return mat4x4(
@@ -197,6 +167,16 @@ float deg_to_rad(float degrees)
 	return degrees * 0.0174533f;
 }
 
+vec3 vec4_to_vec3(vec4 vec)
+{
+	return vec3(vec.x, vec.y, vec.z);
+}
+
+vec4 vec3_to_vec4(vec3 vec, float w)
+{
+	return vec4(vec.x, vec.y, vec.z, w);
+}
+
 float vec3::length()
 {
 	return sqrt(this->x * this->x + this->y * this->y + this->z * this->z);
@@ -211,16 +191,19 @@ vec3 vec3::normalized()
 mat4x4 transform::matrix()
 {
 	mat4x4 scale = get_scale(this->scale);
-	mat4x4 rotate = get_rotation(this->rotation);
+	mat4x4 rotate = get_translation(this->origin * (this->scale * -1)) * 
+		get_rotation(this->rotation) * 
+		get_translation(this->origin * this->scale);
 	mat4x4 translate = get_translation(this->position);
 
-	return (scale * rotate) * translate; 
+	return (rotate * scale) * translate; 
 }
 
 vec3 transform::forward()
 {
-	mat4x4 rotation = mat4_transpose(get_rotation_y(this->rotation.y));
-	return (vec3(0.0f, 0.0f, 1.0f) * rotation).normalized();
+	mat4x4 rotation = get_rotation_y(this->rotation.y);
+	vec4 forward = rotation * vec4(0.0f, 0.0f, -1.0f, 1.0f);
+	return vec4_to_vec3(forward).normalized();
 }
 
 vec3 transform::right()

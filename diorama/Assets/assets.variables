@@ -1,28 +1,28 @@
 asset bitfont sml:
 font_location fonts/sml.font;
-texture_location textures/fonts/sml.png;
+texture_location Assets textures/fonts/sml.png;
 declend; #declend required to end a declaration now
 
-asset material player:
-location textures/player.png;
+asset texture player:
+location Assets/textures/player.png;
 #comment test. End of line is next
 declend;
 
-asset material dirt_01:
-location textures/dirt_01.png;
-walk_sound sounds/dirt_walk_01.wav;
+asset texture dirt_01:
+location Assets/textures/dirt_01.png;
+walk_sound Assets/sounds/dirt_walk_01.wav;
 #reference other asset AssetSound in-code?
 destroy_sound; dirt_walk_01;
 declend;
 
-asset material grass_01:
-location textures/grass_01.png;
-walk_sound sounds/grass_walk_01.wav;
-destroy_sound sounds/grass_walk_01.wav;
+asset texture grass_01:
+location Assets/textures/grass_01.png;
+walk_sound Assets/sounds/grass_walk_01.wav;
+destroy_sound Assets/sounds/grass_walk_01.wav;
 declend;
 
 asset sound dirt_walk_01:
-location assets/sounds/dirt_walk_01;
+location Assets/sounds/dirt_walk_01;
 pitch_varies true;
 pitch_min 0.45;
 pitch_max 0.55;

@@ -99,6 +99,11 @@ struct vec4
 		w = _w;
 	}
 
+	vec4 operator-(const vec4 &right)
+	{
+		return vec4(this->x - right.x, this->y - right.y, this->z - right.z, this->w - right.w);
+	}
+	
 	vec4 operator*(const vec4 &right)
 	{
 		return vec4(this->x * right.x, this->y * right.y, this->z * right.z, this->w * right.w);
@@ -111,6 +116,15 @@ struct vec4
 			   matrix[4] * this->y + matrix[5] * this->y + matrix[6] * this->y + matrix[7] * this->y,
 			   matrix[8] * this->z + matrix[9] * this->z + matrix[10] * this->z + matrix[11] * this->z,
 			   matrix[12] * this->w + matrix[13] * this->w + matrix[14] * this->w + matrix[15] * this->w);
+	}
+
+	friend vec4 operator*(mat4x4 matrix, const vec4 vec)
+	{
+		return vec4(
+				vec.x * matrix[0] + vec.x * matrix[1] + vec.x * matrix[2] + vec.x * matrix[3],
+				vec.y * matrix[4] + vec.y * matrix[5] + vec.y * matrix[6] + vec.y * matrix[7],
+				vec.z * matrix[8] + vec.z * matrix[9] + vec.z * matrix[10] + vec.z * matrix[11],
+				vec.w * matrix[12] + vec.w * matrix[13] + vec.w * matrix[14] + vec.w * matrix[15]);
 	}
 };
 
@@ -161,6 +175,17 @@ struct vec3
 		return vec3(out.x, out.y, out.z);
 	}
 
+	friend vec4 operator*(mat4x4 matrix, const vec3 vector)
+	{
+		vec4 vec = vec4(vector.x, vector.y, vector.z, 1.0f);
+
+		return vec4(
+				vec.x * matrix[0] + vec.x * matrix[1] + vec.x * matrix[2] + vec.x * matrix[3],
+				vec.y * matrix[4] + vec.y * matrix[5] + vec.y * matrix[6] + vec.y * matrix[7],
+				vec.z * matrix[8] + vec.z * matrix[9] + vec.z * matrix[10] + vec.z * matrix[11],
+				vec.w * matrix[12] + vec.w * matrix[13] + vec.w * matrix[14] + vec.w * matrix[15]);
+	}
+
 	vec3 operator+(const vec3 add)
 	{
 		return vec3(this->x + add.x, this->y + add.y, this->z + add.z);
@@ -170,16 +195,6 @@ struct vec3
 	{
 		return vec3(this->x - sub.x, this->y - sub.y, this->z - sub.z);
 	}	
-
-	vec3 operator+=(const vec3 add)
-	{
-		return *this + add;
-	}
-
-	vec3 operator-=(const vec3 sub)
-	{
-		return *this - sub;
-	}
 };
 
 struct vec2
@@ -203,6 +218,11 @@ struct vec2
 		x = _x;
 		y = _y;
 	}
+
+	vec2 operator-(const vec2 &right)
+	{
+		return vec2(this->x - right.x, this->y - right.y);
+	}	
 
 	vec2 operator*(const vec2 &right)
 	{
@@ -250,11 +270,34 @@ struct transform
 	vec3 scale;
 	vec3 rotation;
 
+	vec3 origin;
+
 	transform()
 	{
 		position = vec3(0.0f);
 		scale = vec3(1.0f);
 		rotation = vec3(0.0f);
+
+		origin = vec3(0.0f);
+	}
+
+	bool operator==(const transform &other)
+	{
+		return 
+			this->position.x == other.position.x &&
+			this->position.y == other.position.y &&
+			this->position.z == other.position.z &&
+			this->rotation.x == other.rotation.x &&
+			this->rotation.y == other.rotation.y &&
+			this->rotation.z == other.rotation.z &&
+			this->scale.x == other.scale.x &&
+			this->scale.y == other.scale.y &&
+			this->scale.z == other.scale.z;
+	}
+
+	bool operator!=(const transform &other)
+	{
+		return !(*this == other);
 	}
 
 	vec3 forward();
@@ -289,3 +332,7 @@ mat4x4 mat4_transpose(mat4x4 matrix);
 float rad_to_deg(float radians);
 
 float deg_to_rad(float degrees);
+
+vec3 vec4_to_vec3(vec4 vec);
+
+vec4 vec3_to_vec4(vec3 vec);

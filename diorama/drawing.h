@@ -10,3 +10,7 @@ extern GLint program_general;
 extern bool draw_wireframe;
 
 void draw_vertdata(vertex_data *data, transform *trans);
+
+GLint uniform_float(GLint program, const char * name, float value);
+
+GLint uniform_mat4(GLint program, const char * name, GLsizei count, GLboolean transpose, const GLfloat * value);

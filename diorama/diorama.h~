@@ -1,5 +1,6 @@
 #pragma once
 
+#include "gamemath.h"
 #include "vertex_handler.h"
 #include "entity.h"
 
@@ -25,3 +26,5 @@ void check_keystate(int &keystate, int action);
 void update();
 
 int create_entity(entity *ent, transform *trans);
+
+bool get_sort_entities(const entity *i, const entity *j);

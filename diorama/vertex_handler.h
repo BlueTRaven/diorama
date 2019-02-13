@@ -1,6 +1,7 @@
 #pragma once
 
 #include "gamemath.h"
+#include "gametexture.h"
 
 #include <vector>
 #include <glad\glad.h>
@@ -13,8 +14,11 @@ struct vertex_data
 {
 	int arr;	//opengl array pointer
 	int datas_index;	//index in array.datas where we are
+
 	int start;	//start offset in the array
 	int size;	//size, in vertices
+
+	texture *tex;	//texture bound to these vertices
 };
 
 struct vertex_array
@@ -35,7 +39,7 @@ struct vertex_array
 
 void init_vertex_buffers();
 
-vertex_data *add_vertices(std::vector<Vertex> add_vertices, int to_array);
+vertex_data *add_vertices(std::vector<Vertex> add_vertices, texture *tex, int to_array);
 
 GLint vertex_attribute(GLint program, const char * name, GLint fields, GLsizei size, void * offset);
 
