@@ -26,9 +26,9 @@ struct vertex_array
 	GLuint vert_array;
 	GLuint vert_buffer;
 
-	Vertex vertices[MAX_VERTEX];
+	std::vector<Vertex> vertices;
 
-	std::vector<vertex_data> datas;
+	std::vector<vertex_data*> datas;
 	
 	vertex_array()
 	{
@@ -37,9 +37,9 @@ struct vertex_array
 	}
 };
 
-void init_vertex_buffers();
+void create_vertex_array(vertex_array &arr);
 
-vertex_data *add_vertices(std::vector<Vertex> add_vertices, GLuint texture, int to_array);
+void add_vertices(vertex_array &vert_array, std::vector<Vertex> add_vertices, texture *tex);
 
 GLint vertex_attribute(GLint program, const char * name, GLint fields, GLsizei size, void * offset);
 

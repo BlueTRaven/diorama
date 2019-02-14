@@ -25,7 +25,7 @@ void check_keystate(int &keystate, int action);
 
 void update();
 
-int create_entity(entity *ent, transform *trans);
+int create_entity(entity *ent, transform trans);
 
 void sort_entities();
 bool get_sort_entities(const entity *i, const entity *j);

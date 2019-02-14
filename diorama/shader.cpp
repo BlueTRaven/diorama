@@ -116,7 +116,10 @@ GLint compile_shader(GLenum type, string filename)
 {
 	ifstream file;
 
-	file.open(filename);
+	string directory = "C:/Users/Taylor/Documents/Programming/C++/diorama/diorama/";
+
+	file.open((directory + filename).c_str());
+
 	stringstream strstream;
 	strstream << file.rdbuf();
 	string full = strstream.str();

@@ -15,6 +15,10 @@ walk_sound Assets/sounds/dirt_walk_01.wav;
 destroy_sound; dirt_walk_01;
 declend;
 
+asset texture dirt_grass_side_01:
+location Assets/textures/dirt_grass_side_01.png;
+declend;
+
 asset texture grass_01:
 location Assets/textures/grass_01.png;
 walk_sound Assets/sounds/grass_walk_01.wav;

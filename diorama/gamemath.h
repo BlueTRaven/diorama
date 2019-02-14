@@ -281,6 +281,13 @@ struct transform
 		origin = vec3(0.0f);
 	}
 
+	transform(vec3 _position, vec3 _rotation, vec3 _scale)
+	{
+		position = _position;
+		rotation = _rotation;
+		scale = _scale;
+	}
+
 	bool operator==(const transform &other)
 	{
 		return 

@@ -15,7 +15,9 @@
 
 std::vector<entity*> entities;
 
-transform *transform_camera;
+transform default_camera;
+
+transform transform_camera;
 transform transform_camera_prev;
 
 int keystate_w;
@@ -26,32 +28,45 @@ int keystate_d;
 int keystate_q;
 int keystate_e;
 
+int keystate_z;
+int keystate_x;
+
 const int INPUT_PRESS = 1;
 const int INPUT_RELEASE = 2;
 const int INPUT_NONE = 0;
 
 static float timescale = 1.0f;
 
+const static int MAX_TILES_X = 10;
+const static int MAX_TILES_Y = 10;
+const static int MAX_TILES_Z = 10;
+
+cube *tiles[MAX_TILES_X][MAX_TILES_Y][MAX_TILES_Z];
+
 void diorama_init()
 {
-	transform_camera = new transform();
-	transform_camera->position = vec3(0.0f, -1.0f, -10.0f);
+	default_camera = transform();
+	default_camera.position = vec3(0.0f);//vec3(0.0f, -5.0f, -5.0f);
+	default_camera.rotation = vec3(0.0f);//vec3(45.0f, 0.0f, 0.0f);
+	default_camera.scale = vec3(1.0f, 1.0f, 1.0f);
+
+	transform_camera = default_camera;
 	
-	transform_camera_prev = *transform_camera;
+	transform_camera_prev = transform_camera;
 
-	cube *ca = new cube();
-	cube *cb = new cube();
+	for (int x = 0; x < 3; x++)
+	{
+		for (int y = 0; y < 3; y++)
+		{
+			for (int z = 0; z < 3; z++)
+			{
+				cube *c = new cube();
+				create_entity(c, transform(vec3(x, y, z), vec3(0.0f), vec3(1.0f)));
 
-	transform *transa = new transform();
-	transa->position = vec3(0.0f);
-	transa->scale = vec3(5.0f);
-	transform *transb = new transform();
-	transb->position = vec3(2.0f, 0.0f, 0.0f);
-
-	ca->rotate = true;
-	
-	create_entity(ca, transa); 
-	create_entity(cb, transb);
+				tiles[x][y][z] = c;
+			}
+		}
+	}
 }
 
 void update()
@@ -68,22 +83,27 @@ void update_input()
 {
 	glfwPollEvents();
 
-	vec3 forward = transform_camera->forward();
-	vec3 right = transform_camera->right();
+	vec3 forward = transform_camera.forward();
+	vec3 right = transform_camera.right();
 
 	if (keystate_w == INPUT_PRESS)
-		transform_camera->position = transform_camera->position - forward * 0.1f;
+		transform_camera.position = transform_camera.position - forward * 0.1f;
 	if (keystate_a == INPUT_PRESS)
-		transform_camera->position = transform_camera->position + right * 0.1f;
+		transform_camera.position = transform_camera.position + right * 0.1f;
 	if (keystate_s == INPUT_PRESS)
-		transform_camera->position = transform_camera->position + forward * 0.1f;
+		transform_camera.position = transform_camera.position + forward * 0.1f;
 	if (keystate_d == INPUT_PRESS)
-		transform_camera->position = transform_camera->position - right * 0.1f;
+		transform_camera.position = transform_camera.position - right * 0.1f;
 
 	if (keystate_q == INPUT_PRESS)
-		transform_camera->rotation.y -= 1.0f;
+		transform_camera.rotation.y -= 1.0f;
 	if (keystate_e == INPUT_PRESS)
-		transform_camera->rotation.y += 1.0f;
+		transform_camera.rotation.y += 1.0f;
+
+	if (keystate_z == INPUT_PRESS)
+		transform_camera.position.y += 0.1f;
+	if (keystate_x == INPUT_PRESS)
+		transform_camera.position.y -= 0.1f;
 
 	if (keystate_w == INPUT_RELEASE)
 		keystate_w = INPUT_NONE;
@@ -98,6 +118,11 @@ void update_input()
 		keystate_q = INPUT_NONE;
 	if (keystate_e == INPUT_RELEASE)
 		keystate_e = INPUT_NONE;
+
+	if (keystate_z == INPUT_RELEASE)
+		keystate_z = INPUT_NONE;
+	if (keystate_x == INPUT_RELEASE)
+		keystate_x = INPUT_NONE;
 }
 
 void diorama_key(GLFWwindow *window, int key, int scancode, int action, int mods)
@@ -116,11 +141,14 @@ void diorama_key(GLFWwindow *window, int key, int scancode, int action, int mods
 	if (key == GLFW_KEY_E)
 		check_keystate(keystate_e, action);	
 
+	if (key == GLFW_KEY_Z)
+		check_keystate(keystate_z, action);
+	if (key == GLFW_KEY_X)
+		check_keystate(keystate_x, action);
+
 	if (key == GLFW_KEY_R)
 	{
-		transform_camera = new transform();
-		transform_camera = new transform();
-		transform_camera->position = vec3(0.0f, -1.0f, 0.0f);
+		transform_camera = default_camera;
 	}
 }
 
@@ -134,6 +162,8 @@ void check_keystate(int &keystate, int action)
 	
 void draw()
 {
+	clear_glerrors();
+
 	GLFWwindow *window = glfwGetCurrentContext();
 
 	int width, height;
@@ -142,15 +172,14 @@ void draw()
 	glfwGetFramebufferSize(window, &width, &height);
 	ratio = width / (float)height;
 
+	glEnable(GL_DEPTH_TEST);
+	glDepthMask(GL_TRUE);
+	glDepthFunc(GL_LESS);
+
 	glViewport(0, 0, width, height);
 	glClearColor(0.0f, 0.0f, 0.1f, 0.0f);
 	
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-	glDepthRange(0, 1);	
-	glDepthMask(GL_TRUE);
-	glEnable(GL_DEPTH_TEST);
-	glDepthFunc(GL_LESS);
 	
 	draw_world(width, height, ratio);
 
@@ -161,40 +190,26 @@ void draw_world(int width, int height, float ratio)
 {
 	glUseProgram(program_general);
 
-	glBindBuffer(GL_ARRAY_BUFFER, vertex_arrays[0]->vert_buffer);
-
-	GLint attrib_position = vertex_attribute(program_general, "position", 3, sizeof(Vertex), (void*)0);
-	GLint attrib_tex_coord = vertex_attribute(program_general, "tex_coord", 2, sizeof(Vertex), (void*)offsetof(Vertex, tex_coords));
-	GLint attrib_color = vertex_attribute(program_general, "color", 4, sizeof(Vertex), (void*)offsetof(Vertex, color));
-
 	mat4x4 matrix = get_perspective(width, height, 1.0f, 100.0f, 60.0f);
 
- 	mat4x4 camera = get_rotation(transform_camera->rotation) * get_translation(transform_camera->position);
+ 	mat4x4 camera = get_rotation(transform_camera.rotation) * get_translation(transform_camera.position);
 
-	uniform_mat4(program_general, "projection", 1, false, matrix.m); 
+	uniform_mat4(program_general, "projection", 1, true, matrix.m); 
 	uniform_mat4(program_general, "camera", 1, true, camera.m); 
 
 	glEnable(GL_CULL_FACE);
 	glFrontFace(GL_CW);
-	glCullFace(GL_BACK);
-
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+	glCullFace(GL_FRONT);
 	
 	for (int i = 0; i < entities.size(); i++)
 	{
 		entities[i]->draw();
 	}
 
-	disable_vertex_attribute(attrib_position);
-	disable_vertex_attribute(attrib_tex_coord);
-	disable_vertex_attribute(attrib_color);
+	printf_glerrors();	
 }
 
-int create_entity(entity *ent, transform *trans)
+int create_entity(entity *ent, transform trans)
 {
 	entities.push_back(ent);
 
@@ -210,8 +225,8 @@ void sort_entities()
 
 bool get_sort_entities(const entity *i, const entity *j)
 {
-	vec3 i_dist_to_cam = (transform_camera->position - i->trans->position);
-	vec3 j_dist_to_cam = (transform_camera->position - j->trans->position);
+	vec3 i_dist_to_cam = (transform_camera.position - i->trans.position);
+	vec3 j_dist_to_cam = (transform_camera.position - j->trans.position);
 
 	return i_dist_to_cam.length() < j_dist_to_cam.length(); 
 }

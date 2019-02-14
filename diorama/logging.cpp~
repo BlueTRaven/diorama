@@ -3,7 +3,7 @@
 
 #include <stdio.h>
 
-void printf_glerrors()
+bool printf_glerrors()
 {
 	bool any_err = false;
 
@@ -16,6 +16,8 @@ void printf_glerrors()
 
 	if (!any_err)
 		printf("No errors were found.\n");
+
+	return any_err;
 }
 
 void clear_glerrors()

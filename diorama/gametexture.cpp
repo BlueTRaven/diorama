@@ -28,6 +28,7 @@ texture* load_get_texture(std::string tex_name)
 		//texture could not be found; load it
 		if (!load_texture(tex_name))
 			printf("Could not load texture %s.\n", tex_name.c_str());
+		else printf("Texture %s loaded.\n", tex_name.c_str());
 	}
 }
 
@@ -48,8 +49,10 @@ bool load_texture(std::string tex_name)
 			{
 				std::string location = decl.parameters["location"].value;
 
+				std::string directory = "C:/Users/Taylor/Documents/Programming/C++/diorama/diorama/";
+				
 				int width, height, nrChannels;
-				unsigned char *data = stbi_load(location.c_str(), &width, &height, &nrChannels, 0);
+				unsigned char *data = stbi_load((directory + location).c_str(), &width, &height, &nrChannels, 0);
 
 				if (data == NULL)
 				{
@@ -57,15 +60,11 @@ bool load_texture(std::string tex_name)
 					return false;
 				}
 
-				clear_glerrors();
-
 				GLuint gl_pointer;
 				glGenTextures(1, &gl_pointer);
 				glBindTexture(GL_TEXTURE_2D, gl_pointer);
 
 				glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
-				printf_glerrors();
-
 				texture *tex = new texture();
 				tex->name = tex_name;
 				tex->location = location;

@@ -11,10 +11,10 @@ extern std::map<std::string, texture*> loaded_textures;
 
 struct entity
 {
-	transform *trans;
-	vertex_data *vertices;
+	transform trans;
+	vertex_array *vertices;
 
-	virtual void init(transform *_trans);
+	virtual void init(transform _trans);
 
 	virtual void update(float time);
 
@@ -23,9 +23,5 @@ struct entity
 
 struct cube : entity
 {
-	bool rotate = false;
-
-	virtual void init(transform *_trans) override;
-
-	virtual void update(float time) override;
+	virtual void init(transform _trans) override;
 };

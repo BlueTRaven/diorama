@@ -19,7 +19,9 @@ vector<Decl> load_variable_file(const char * source)
 	string line;
 
 	ifstream file;
-	file.open(source);
+
+	string directory = "C:/Users/Taylor/Documents/Programming/C++/diorama/diorama/";	
+	file.open((directory + source).c_str());
 
 	Decl decl;
 	vector<Decl> declarations;

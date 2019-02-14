@@ -14,9 +14,6 @@ bool printf_glerrors()
 		printf("Encountered OpenGL error: 0x%X\n", err);
 	}	
 
-	if (!any_err)
-		printf("No errors were found.\n");
-
 	return any_err;
 }
 
