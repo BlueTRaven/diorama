@@ -190,16 +190,22 @@ void draw_world(int width, int height, float ratio)
 {
 	glUseProgram(program_general);
 
-	mat4x4 matrix = get_perspective(width, height, 1.0f, 100.0f, 60.0f);
+	float pers_near = 1.0f;
+	float pers_far = 1000.0f;
+
+	float top, bottom, left, right;
+	compute_screen_coordinates(45, (float)width / (float)height, pers_near, pers_far, left, right, top, bottom);
+	mat4x4 matrix = get_perspective_2(left, right, top, bottom, pers_near, pers_far);
+	//get_perspective(width, height, 1.0f, 100.0f, 60.0f);
 
  	mat4x4 camera = get_rotation(transform_camera.rotation) * get_translation(transform_camera.position);
 
-	uniform_mat4(program_general, "projection", 1, true, matrix.m); 
+	uniform_mat4(program_general, "projection", 1, false, matrix.m); 
 	uniform_mat4(program_general, "camera", 1, true, camera.m); 
 
 	glEnable(GL_CULL_FACE);
 	glFrontFace(GL_CW);
-	glCullFace(GL_FRONT);
+	glCullFace(GL_BACK);
 	
 	for (int i = 0; i < entities.size(); i++)
 	{

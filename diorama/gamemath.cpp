@@ -15,7 +15,7 @@ mat4x4 get_identity()
 mat4x4 get_perspective(float width, float height, float z_near, float z_far, float fov)
 {
 	const float ar = width / height;
-	const float z_range = z_near - z_far;
+	const float z_range = z_far - z_near;
 	const float half_fov = (float)tan(deg_to_rad(fov / 2.0f));
 
 	mat4x4 matrix = mat4x4();
@@ -37,9 +37,47 @@ mat4x4 get_perspective(float width, float height, float z_near, float z_far, flo
 
 	matrix.m[12] = 0.0f;
 	matrix.m[13] = 0.0f;
-	matrix.m[14] = 1.0f;
+	matrix.m[14] = -1.0f;
 	matrix.m[15] = 0.0f;		
 	
+	return matrix;
+}
+
+void compute_screen_coordinates(const float &angle_of_view, const float &aspect_ratio, const float &pers_near, const float &pers_far, float &left, float &right, float &top, float &bottom) 
+{
+	float scale = tan(angle_of_view * 0.5f * 3.1415f / 180) * pers_near;
+	right = aspect_ratio * scale, left = -right;
+	top = scale, bottom = -top;
+}
+
+mat4x4 get_perspective_2(float left, float right, float top, float bottom, float pers_near, float pers_far)
+{
+	mat4x4 matrix = mat4x4();
+
+	//row 1
+	matrix.m[0] = (2 * pers_near) / (right - left);
+	matrix.m[1] = 0;
+	matrix.m[2] = (right + left) / (right - left);
+	matrix.m[3] = 0;
+
+	//row 2
+	matrix.m[4] = 0;
+	matrix.m[5] = (2 * pers_near) / (top - bottom);
+	matrix.m[6] = (top + bottom) / (top - bottom);
+	matrix.m[7] = 0;
+
+	//row 3	
+	matrix.m[8] = 0;
+	matrix.m[9] = 0;
+	matrix.m[10] = -((pers_far + pers_near) / (pers_far - pers_near));
+	matrix.m[11] = -((2 * pers_far * pers_near) / (pers_far - pers_near));
+
+	//row 4	
+	matrix.m[12] = 0;
+	matrix.m[13] = 0;
+	matrix.m[14] = -1;
+	matrix.m[15] = 0;
+
 	return matrix;
 }
 

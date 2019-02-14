@@ -285,7 +285,7 @@ struct transform
 	{
 		position = _position;
 		rotation = _rotation;
-		scale = _scale
+		scale = _scale;
 	}
 
 	bool operator==(const transform &other)
@@ -319,6 +319,10 @@ struct transform
 mat4x4 get_identity();
 
 mat4x4 get_perspective(float width, float height, float z_near, float z_far, float fov);
+
+void compute_screen_coordinates(const float &angle_of_view, const float &aspect_ratio, const float &near, const float &far, float &left, float &right, float &top, float &bottom);
+
+mat4x4 get_perspective_2(float left, float right, float top, float bottom, float near, float far);
 
 mat4x4 get_rotation_x(float degrees);
 

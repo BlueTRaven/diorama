@@ -320,6 +320,10 @@ mat4x4 get_identity();
 
 mat4x4 get_perspective(float width, float height, float z_near, float z_far, float fov);
 
+void compute_screen_coordinates(const float &angle_of_view, const float &aspect_ratio, const float &pers_near, const float &pers_far, float &left, float &right, float &top, float &bottom);
+
+mat4x4 get_perspective_2(float left, float right, float top, float bottom, float pers_near, float pers_far);
+
 mat4x4 get_rotation_x(float degrees);
 
 mat4x4 get_rotation_y(float degrees);
