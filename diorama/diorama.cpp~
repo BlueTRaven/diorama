@@ -261,6 +261,8 @@ void draw_world(int width, int height, float ratio)
 	glFrontFace(GL_CW);
 	glCullFace(GL_BACK);
 	
+	glEnable(GL_MULTISAMPLE);
+
 	for (int i = 0; i < entities.size(); i++)
 	{
 		entities[i]->draw();

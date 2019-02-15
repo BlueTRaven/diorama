@@ -78,7 +78,7 @@ void diorama_init()
 	}
 }
 
-void update()
+void diorama_update()
 {
 	float time = (float)glfwGetTime();
 
@@ -103,7 +103,7 @@ void update()
 	}
 }
 
-void update_input()
+void diorama_update_input()
 {
 	glfwPollEvents();
 
@@ -212,7 +212,7 @@ void check_keystate(int &keystate, int action)
 		keystate = INPUT_RELEASE;
 }
 	
-void draw()
+void diorama_draw()
 {
 	clear_glerrors();
 

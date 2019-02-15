@@ -169,6 +169,21 @@ float lerp(float start, float end, float percent)
 	return (start + percent * (end - start));
 }
 
+vec2 vec2_lerp(vec2 start, vec2 end, float percent)
+{
+	return vec2(lerp(start.x, end.x, percent), lerp(start.y, end.y, percent));
+}
+
+vec3 vec3_lerp(vec3 start, vec3 end, float percent)
+{
+	return vec3(lerp(start.x, end.x, percent), lerp(start.y, end.y, percent), lerp(start.z, end.z, percent));
+}
+
+vec4 vec4_lerp(vec4 start, vec4 end, float percent)
+{
+	return vec4(lerp(start.x, end.x, percent), lerp(start.y, end.y, percent), lerp(start.z, end.z, percent), lerp(start.w, end.w, percent));
+}
+
 float rad_to_deg(float radians)
 {
 	return radians * 57.2958f;

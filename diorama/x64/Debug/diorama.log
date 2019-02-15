@@ -1,6 +1,2 @@
-﻿  diorama.cpp
-c:\users\taylor\documents\programming\c++\diorama\diorama\diorama.cpp(73): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-c:\users\taylor\documents\programming\c++\diorama\diorama\diorama.cpp(280): warning C4267: 'return': conversion from 'size_t' to 'int', possible loss of data
-  main.cpp
-  Generating Code...
+﻿  input.cpp
   diorama.vcxproj -> C:\Users\Taylor\Documents\Programming\C++\diorama\x64\Debug\diorama.exe

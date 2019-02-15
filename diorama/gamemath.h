@@ -315,7 +315,11 @@ struct transform
 
 float lerp(float start, float end, float percent);
 
-//TODO vector lerp
+vec2 vec2_lerp(vec2 start, vec2 end, float percent);
+
+vec3 vec3_lerp(vec3 start, vec3 end, float percent);
+
+vec4 vec4_lerp(vec4 start, vec4 end, float percent);
 
 mat4x4 get_identity();
 
