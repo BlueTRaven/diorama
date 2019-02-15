@@ -8,6 +8,7 @@
 #include "entity.h"
 #include "drawing.h"
 #include "input.h"
+#include "camera.h"
 
 #include <stdio.h>
 
@@ -15,17 +16,6 @@
 #include <algorithm>
 
 std::vector<entity*> entities;
-
-vec3 camera_orbit;
-
-transform default_camera;
-transform transform_camera;
-transform transform_camera_prev;
-
-bool rotating_y;
-float start_rotating_time;
-float start_rotating_y;
-float desired_rotating_y;
 
 static float timescale = 1.0f;
 
@@ -43,15 +33,14 @@ void diorama_init()
 {
 	kb_event = keybind_subscribe(diorama_keybind_updated);
 
-	camera_orbit = vec3(0.0f, -8.0f, -8.0f);
-	default_camera = transform();
+	transform default_camera = transform();
 	default_camera.position = vec3(-1.5f, -8.0f - 3.0f, -8.0f - 1.5f);
 	default_camera.rotation = vec3(45.0f, 0.0f, 0.0f);
 	default_camera.scale = vec3(1.0f, 1.0f, 1.0f);
 
-	transform_camera = default_camera;
-	
-	transform_camera_prev = transform_camera;
+	camera_init(default_camera);
+
+	create_entity(new player(), transform(vec3(1.0f, 3.0f, 1.0f), vec3(0.0f), vec3(1.0f)));
 
 	for (int x = 0; x < 3; x++)
 	{
@@ -90,20 +79,7 @@ void diorama_update()
 		entities[i]->update(time);
 	}
 
-	if (rotating_y)
-	{
-		float period = 0.25f;
-
-		float percent = (time - start_rotating_time) / period;
-
-		transform_camera.rotation.y = lerp(start_rotating_y, desired_rotating_y, percent);
-
-		if (percent > 0.99f)
-		{
-			transform_camera.rotation.y = desired_rotating_y;
-			rotating_y = false;
-		}
-	}
+	camera_update(time);
 }
 
 bool is_valid_tile(vec3 position)
@@ -125,18 +101,17 @@ void set_selected_tile(vec3 position)
 		selected = tiles[(int)position.x][(int)position.y][(int)position.z];
 		selected->flags |= selected->SELECTED;
 
-		transform_camera.position = (selected->trans.position * -1)+ camera_orbit - vec3(0.5f); 
+		camera_follow_entity(selected);
 	}
 }
 
 void diorama_keybind_updated(keybind bind)
 {
-	vec3 forward = transform_camera.forward();
-	vec3 right = transform_camera.right();
+	vec3 forward = camera_transform.forward();
+	vec3 right = camera_transform.right();
 
 	if ((bind.state == INPUT_PRESS) && bind.name == "forward")
 		set_selected_tile(selected->trans.position + vec3(0.0f, 0.0f, -1.0f));
-
 	if ((bind.state == INPUT_PRESS) && bind.name == "backward")
 		set_selected_tile(selected->trans.position + vec3(0.0f, 0.0f, 1.0f));
 	if ((bind.state == INPUT_PRESS) && bind.name == "left")
@@ -144,21 +119,11 @@ void diorama_keybind_updated(keybind bind)
 	if ((bind.state == INPUT_PRESS) && bind.name == "right")		
 		set_selected_tile(selected->trans.position + vec3(1.0f, 0.0f, 0.0f));
 
-	if (bind.name == "rotate_cw" && bind.state == INPUT_PRESS && !rotating_y)
-	{
-		rotating_y = true;
-		start_rotating_y = transform_camera.rotation.y;
-		desired_rotating_y = transform_camera.rotation.y - 45.0f;
-		start_rotating_time = (float)glfwGetTime();		
-	}
+	if (bind.name == "rotate_cw" && bind.state == INPUT_PRESS)
+		camera_start_rotating(-1);
 
-	if (bind.name == "rotate_ccw" && bind.state == INPUT_PRESS && !rotating_y)
-	{
-		rotating_y = true;
-		start_rotating_y = transform_camera.rotation.y;
-		desired_rotating_y = transform_camera.rotation.y + 45.0f;
-		start_rotating_time = (float)glfwGetTime();		
-	}
+	if (bind.name == "rotate_ccw" && bind.state == INPUT_PRESS)
+		camera_start_rotating(1);
 }
 
 void diorama_draw()
@@ -194,13 +159,8 @@ void draw_world(int width, int height, float ratio)
 	compute_screen_coordinates(45, (float)width / (float)height, pers_near, pers_far, left, right, top, bottom);
 	mat4x4 matrix = get_perspective(left, right, top, bottom, pers_near, pers_far);
 
-	mat4x4 camera = get_rotation_x(transform_camera.rotation.x) * 
-		get_translation(camera_orbit) * 
-		get_rotation_y(transform_camera.rotation.y * -1) * 
-		get_translation(transform_camera.position + camera_orbit * -1);
-
 	uniform_mat4(program_general, "projection", 1, true, matrix.m); 
-	uniform_mat4(program_general, "camera", 1, true, camera.m); 
+	uniform_mat4(program_general, "camera", 1, true, camera_get_matrix().m); 
 
 	glEnable(GL_CULL_FACE);
 	glFrontFace(GL_CW);
@@ -223,17 +183,4 @@ int create_entity(entity *ent, transform trans)
 	ent->init(trans);
 
 	return entities.size() - 1;
-}
-
-void sort_entities()
-{
-	std::sort(entities.begin(), entities.end(), get_sort_entities);		
-}
-
-bool get_sort_entities(const entity *i, const entity *j)
-{
-	vec3 i_dist_to_cam = (transform_camera.position - i->trans.position);
-	vec3 j_dist_to_cam = (transform_camera.position - j->trans.position);
-
-	return i_dist_to_cam.length() < j_dist_to_cam.length(); 
 }

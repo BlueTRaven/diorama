@@ -14,6 +14,8 @@ extern std::vector<vertex_array*> vertex_arrays;
 
 extern GLint program_general;
 
+extern transform camera_transform;
+
 void diorama_init();
 
 void diorama_draw();
@@ -27,6 +29,3 @@ void set_selected_tile(vec3 position);
 bool is_valid_tile(vec3 position);
 
 int create_entity(entity *ent, transform trans);
-
-void sort_entities();
-bool get_sort_entities(const entity *i, const entity *j);

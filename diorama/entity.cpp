@@ -7,6 +7,8 @@
 #include "drawing.h"
 #include "gametexture.h"
 #include "colors.h"
+#include "input.h"
+#include "camera.h"
 
 void entity::init(transform _trans) 
 {
@@ -22,6 +24,8 @@ void entity::draw()
 	if (this->vert_array != NULL)
 		draw_vertdata(this->vert_array, this->trans);
 }
+
+void entity::on_kill() { }
 
 void cube::init(transform _trans) 
 {
@@ -133,4 +137,59 @@ void cube::update(float time)
 		this->vert_array->draw_flags |= this->vert_array->DRAW_WIREFRAME;
 	else
 		this->vert_array->draw_flags = this->vert_array->draw_flags & ~this->vert_array->DRAW_WIREFRAME;
+}
+
+void player::init(transform _trans)
+{
+	entity::init(_trans);
+
+	this->kb_event = keybind_subscribe(&player::keybind_updated);
+
+	vertex_array *arr = new vertex_array();
+
+	std::vector<Vertex> vertices;
+	std::vector<unsigned int> indices;
+
+	//front side
+	vertices.push_back(Vertex(vec3(1.0f, 0.0f, 1.0f), vec2(0.0f, 0.0f), WHITE));
+	vertices.push_back(Vertex(vec3(0.0f, 0.0f, 1.0f), vec2(1.0f, 0.0f), WHITE));
+	vertices.push_back(Vertex(vec3(0.0f, 1.0f, 1.0f), vec2(1.0f, 1.0f), WHITE));
+	vertices.push_back(Vertex(vec3(1.0f, 1.0f, 1.0f), vec2(0.0f, 1.0f), WHITE));
+
+	indices.push_back(0);
+	indices.push_back(1);
+	indices.push_back(2);
+
+	indices.push_back(2);
+	indices.push_back(3);
+	indices.push_back(0);
+	
+	add_vertices(arr, vertices, indices, loaded_textures["dirt_grass_side_01"]);
+
+	create_vertex_array(arr);
+
+	this->vert_array = arr;
+}
+
+void player::keybind_updated(keybind bind)
+{
+	if ((bind.state == INPUT_PRESS) && bind.name == "forward")
+		this->trans.position.z += 1;
+	if ((bind.state == INPUT_PRESS) && bind.name == "backward")
+		this->trans.position.z -= 1;
+	if ((bind.state == INPUT_PRESS) && bind.name == "left")
+		this->trans.position.x -= 1;
+	if ((bind.state == INPUT_PRESS) && bind.name == "right")		
+		this->trans.position.x += 1;
+}
+
+void player::update(float time)
+{
+	this->trans.origin = this->trans.position * -1 - vec3(0.5f);
+	this->trans.rotation.y = camera_transform.rotation.y;
+}
+
+void player::on_kill()
+{
+
 }
