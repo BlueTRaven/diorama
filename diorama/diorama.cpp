@@ -35,6 +35,8 @@ const static int MAX_TILES_Z = 10;
 
 cube *tiles[MAX_TILES_X][MAX_TILES_Y][MAX_TILES_Z];
 
+cube *selected;
+
 keybind_event *kb_event;
 
 void diorama_init()
@@ -57,6 +59,17 @@ void diorama_init()
 		{
 			for (int z = 0; z < 3; z++)
 			{
+				tiles[x][y][z] = NULL; //init all tiles to null
+			}
+		}
+	}
+
+	for (int x = 0; x < 3; x++)
+	{
+		for (int y = 0; y < 3; y++)
+		{
+			for (int z = 0; z < 3; z++)
+			{
 				cube *c = new cube();
 				create_entity(c, transform(vec3(x, y, z), vec3(0.0f), vec3(1.0f)));
 
@@ -64,6 +77,8 @@ void diorama_init()
 			}
 		}
 	}
+
+	set_selected_tile(vec3(1.0f, 2.0f, 1.0f));	
 }
 
 void diorama_update()
@@ -91,25 +106,49 @@ void diorama_update()
 	}
 }
 
+bool is_valid_tile(vec3 position)
+{
+	if (position.x < 0 || position.y < 0 || position.z < 0)
+		return false;
+	if (position.x >= MAX_TILES_X || position.y >= MAX_TILES_Y || position.z >= MAX_TILES_Z)
+		return false;
+
+	return tiles[(int)position.x][(int)position.y][(int)position.z] != NULL;
+}
+
+void set_selected_tile(vec3 position)
+{
+	if (is_valid_tile(position))
+	{
+		if (selected != NULL)
+			selected->flags = selected->flags & ~selected->SELECTED;
+		selected = tiles[(int)position.x][(int)position.y][(int)position.z];
+		selected->flags |= selected->SELECTED;
+
+		transform_camera.position = (selected->trans.position * -1)+ camera_orbit - vec3(0.5f); 
+	}
+}
+
 void diorama_keybind_updated(keybind bind)
 {
 	vec3 forward = transform_camera.forward();
 	vec3 right = transform_camera.right();
 
-	if ((bind.state == INPUT_HOLD || bind.state == INPUT_PRESS) && bind.name == "forward")
-		transform_camera.position = transform_camera.position - forward * 0.1f;	
-	if ((bind.state == INPUT_HOLD || bind.state == INPUT_PRESS) && bind.name == "backward")
-		transform_camera.position = transform_camera.position + forward * 0.1f;
-	if ((bind.state == INPUT_HOLD || bind.state == INPUT_PRESS) && bind.name == "left")
-		transform_camera.position = transform_camera.position + right * 0.1f;
-	if ((bind.state == INPUT_HOLD || bind.state == INPUT_PRESS) && bind.name == "right")		
-		transform_camera.position = transform_camera.position - right * 0.1f;
+	if ((bind.state == INPUT_PRESS) && bind.name == "forward")
+		set_selected_tile(selected->trans.position + vec3(0.0f, 0.0f, -1.0f));
+
+	if ((bind.state == INPUT_PRESS) && bind.name == "backward")
+		set_selected_tile(selected->trans.position + vec3(0.0f, 0.0f, 1.0f));
+	if ((bind.state == INPUT_PRESS) && bind.name == "left")
+		set_selected_tile(selected->trans.position + vec3(-1.0f, 0.0f, 0.0f));
+	if ((bind.state == INPUT_PRESS) && bind.name == "right")		
+		set_selected_tile(selected->trans.position + vec3(1.0f, 0.0f, 0.0f));
 
 	if (bind.name == "rotate_cw" && bind.state == INPUT_PRESS && !rotating_y)
 	{
 		rotating_y = true;
 		start_rotating_y = transform_camera.rotation.y;
-		desired_rotating_y = transform_camera.rotation.y + 45.0f;
+		desired_rotating_y = transform_camera.rotation.y - 45.0f;
 		start_rotating_time = (float)glfwGetTime();		
 	}
 
@@ -117,7 +156,7 @@ void diorama_keybind_updated(keybind bind)
 	{
 		rotating_y = true;
 		start_rotating_y = transform_camera.rotation.y;
-		desired_rotating_y = transform_camera.rotation.y - 45.0f;
+		desired_rotating_y = transform_camera.rotation.y + 45.0f;
 		start_rotating_time = (float)glfwGetTime();		
 	}
 }
@@ -133,10 +172,6 @@ void diorama_draw()
 
 	glfwGetFramebufferSize(window, &width, &height);
 	ratio = width / (float)height;
-
-	glEnable(GL_DEPTH_TEST);
-	glDepthMask(GL_TRUE);
-	glDepthFunc(GL_LESS);
 
 	glViewport(0, 0, width, height);
 	glClearColor(0.0f, 0.0f, 0.1f, 0.0f);

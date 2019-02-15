@@ -24,23 +24,44 @@ void draw_vertdata(vertex_array *vert_array, transform trans)
 
 	mat4x4 matrix = trans.matrix();
 	uniform_mat4(program_general, "object", 1, true, matrix.m); 	
+
+	glEnable(GL_DEPTH_TEST);
+	glDepthMask(GL_TRUE);
+	glDepthFunc(GL_LESS);
+
+	if (vert_array->draw_flags & vert_array->DRAW)
+	{	
+		for (int i = 0; i < vert_array->datas.size(); i++)
+		{
+			vertex_data *data = vert_array->datas[i];
+
+			if (vert_array->draw_flags & vert_array->DRAW_TEXTURE)
+			{
+				glBindTexture(GL_TEXTURE_2D, data->tex->gl_pointer);
+
+				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 	
-	for (int i = 0; i < vert_array->datas.size(); i++)
-	{
-		vertex_data *data = vert_array->datas[i];
+				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+			}
 
-		glBindTexture(GL_TEXTURE_2D, data->tex->gl_pointer);
-
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-	
-		if (draw_wireframe)
-			glDrawElements(GL_LINE_STRIP, data->size, GL_UNSIGNED_INT, (void*)(data->start * sizeof(unsigned int)));
-		else glDrawElements(GL_TRIANGLES, data->size, GL_UNSIGNED_INT, (void*)(data->start * sizeof(unsigned int)));
+			glDrawElements(GL_TRIANGLES, data->size, GL_UNSIGNED_INT, (void*)(data->start * sizeof(unsigned int)));
+		}
 	}
+
+	glDisable(GL_DEPTH_TEST);
+
+	if (vert_array->draw_flags & vert_array->DRAW_WIREFRAME)	
+	{
+		for (int i = 0; i < vert_array->datas.size(); i++)
+		{
+			vertex_data *data = vert_array->datas[i];
+
+			glBindTexture(GL_TEXTURE_2D, 0);
+			glDrawElements(GL_LINE_STRIP, data->size, GL_UNSIGNED_INT, (void*)(data->start * sizeof(unsigned int)));
+		}
+	}	
 
 	disable_vertex_attribute(attrib_position);
 	disable_vertex_attribute(attrib_tex_coord);

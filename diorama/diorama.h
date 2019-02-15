@@ -23,6 +23,9 @@ void diorama_keybind_updated(keybind bind);
 
 void diorama_update();
 
+void set_selected_tile(vec3 position);
+bool is_valid_tile(vec3 position);
+
 int create_entity(entity *ent, transform trans);
 
 void sort_entities();

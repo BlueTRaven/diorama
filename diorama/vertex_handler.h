@@ -23,6 +23,12 @@ struct vertex_data
 
 struct vertex_array
 {
+	const int DRAW = 1 << 0;
+	const int DRAW_TEXTURE = 1 << 1;
+	const int DRAW_WIREFRAME = 1 << 2;
+
+	unsigned int draw_flags;
+
 	GLuint vert_array;
 	GLuint vert_buffer;
 	GLuint index_buffer;
@@ -36,6 +42,10 @@ struct vertex_array
 	
 	vertex_array()
 	{
+		draw_flags = 0;
+		draw_flags |= DRAW;
+		draw_flags |= DRAW_TEXTURE;
+
 		vert_array = 0;
 		vert_buffer = 0;
 

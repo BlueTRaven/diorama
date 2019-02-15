@@ -13,6 +13,12 @@ struct entity
 {
 	unsigned int flags;
 
+	unsigned int debug_flags;
+	unsigned int editor_flags;
+
+	const int DEBUG_DRAW_TEXTURE = 1 << 0;
+	const int DEBUG_DRAW_WIREFRAME = 1 << 1;
+
 	transform trans;
 	vertex_array *vert_array;
 
@@ -25,7 +31,7 @@ struct entity
 
 struct cube : entity
 {
-	const int SELECTED = 1 << 0;
+	const int SELECTED = 1 << 0;	//first flag
 
 	virtual void init(transform _trans) override;
 

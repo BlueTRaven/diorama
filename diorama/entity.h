@@ -13,6 +13,9 @@ struct entity
 {
 	unsigned int flags;
 
+	unsigned int debug_flags;
+	unsigned int editor_flags;
+
 	transform trans;
 	vertex_array *vert_array;
 

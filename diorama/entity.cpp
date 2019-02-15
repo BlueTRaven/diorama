@@ -130,11 +130,7 @@ void cube::init(transform _trans)
 void cube::update(float time)
 {
 	if ((flags & SELECTED) == SELECTED)
-	{
-		float period = 4;
-	
-		float percent = fmod(time, period) / period;
-
-		this->vert_array->tint = vec4(percent, 1.0f, 1.0f, 1.0f);
-	}
+		this->vert_array->draw_flags |= this->vert_array->DRAW_WIREFRAME;
+	else
+		this->vert_array->draw_flags = this->vert_array->draw_flags & ~this->vert_array->DRAW_WIREFRAME;
 }
