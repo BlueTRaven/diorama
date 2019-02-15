@@ -11,6 +11,17 @@ std::vector<keybind> keybindings;
 
 std::vector<keybind_event*> events;
 
+keybind_event *keybind_subscribe(void (*keybind_updated)(keybind bind))
+{
+	keybind_event *event = new keybind_event();
+
+	event->index = events.size();
+	event->keybind_updated = keybind_updated;	
+	events.push_back(event);	
+	
+	return event;
+}
+
 void init_input()
 {
 	std::vector<Decl> keybind_decls = load_variable_file("Assets/input.variables");
@@ -41,18 +52,16 @@ void update_input()
 {
 	for (int i = 0; i < keybindings.size(); i++)
 	{
-		keybind bind = keybindings[i];
-		
-		if (bind.state == INPUT_PRESS)
+		if (keybindings[i].state == INPUT_PRESS || keybindings[i].state == INPUT_HOLD)
 		{
-			bind.state = INPUT_HOLD;
-			keybind_updated(bind);
+			keybindings[i].state = INPUT_HOLD;
+			keybind_updated(keybindings[i]);
 		}
 
-		if (bind.state == INPUT_RELEASE)
+		if (keybindings[i].state == INPUT_RELEASE)
 		{
-			bind.state = INPUT_NONE;	
-			keybind_updated(bind);
+			keybindings[i].state = INPUT_NONE;	
+			keybind_updated(keybindings[i]);
 		}
 	}
 }
@@ -61,20 +70,18 @@ void recieve_key_callback(GLFWwindow *window, int key, int scancode, int action,
 {
 	for (int i = 0; i < keybindings.size(); i++)
 	{
-		keybind bind = keybindings[i];
-
-		if (bind.key == key)
+		if (keybindings[i].key == key)
 		{
-			if (bind.state == INPUT_NONE && action == GLFW_PRESS)
+			if (keybindings[i].state == INPUT_NONE && action == GLFW_PRESS)
 			{
-				bind.state = INPUT_PRESS;
-				keybind_updated(bind);
+				keybindings[i].state = INPUT_PRESS;
+				keybind_updated(keybindings[i]);
 			}
 			
-			if (bind.state != INPUT_NONE && action == GLFW_RELEASE)
+			if (keybindings[i].state != INPUT_NONE && action == GLFW_RELEASE)
 			{
-				bind.state = INPUT_RELEASE;
-				keybind_updated(bind);
+				keybindings[i].state = INPUT_RELEASE;
+				keybind_updated(keybindings[i]);
 			}
 		}
 	}
@@ -88,6 +95,4 @@ void keybind_updated(keybind bind)
 
 		event->keybind_updated(bind);
 	}	
-
-	printf("keybind %s updated to state %i.\n", bind.name.c_str(), bind.state);
 }

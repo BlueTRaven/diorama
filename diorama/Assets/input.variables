@@ -2,22 +2,22 @@ input gameplay forward:
 key 87;
 declend;
 
-input gameplay backward;
+input gameplay backward:
 key 83;
 declend;
 
-input gameplay left;
+input gameplay left:
 key 65;
 declend;
 
-input gameplay right;
+input gameplay right:
 key 68;
 declend;
 
-input gameplay rotate_cw;
+input gameplay rotate_cw:
 key 81;
 declend;
 
-input gameplay rotate_ccw;
+input gameplay rotate_ccw:
 key 69;
 declend;

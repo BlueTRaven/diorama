@@ -7,6 +7,7 @@
 #include "logging.h"
 #include "entity.h"
 #include "drawing.h"
+#include "input.h"
 
 #include <stdio.h>
 
@@ -26,22 +27,6 @@ float start_rotating_time;
 float start_rotating_y;
 float desired_rotating_y;
 
-int keystate_w;
-int keystate_a;
-int keystate_s;
-int keystate_d;
-
-int keystate_q;
-int keystate_e;
-
-int keystate_z;
-int keystate_x;
-
-const int INPUT_PRESS = 1;
-const int INPUT_HOLD = 2;
-const int INPUT_RELEASE = 3;
-const int INPUT_NONE = 0;
-
 static float timescale = 1.0f;
 
 const static int MAX_TILES_X = 10;
@@ -50,9 +35,12 @@ const static int MAX_TILES_Z = 10;
 
 cube *tiles[MAX_TILES_X][MAX_TILES_Y][MAX_TILES_Z];
 
+keybind_event *kb_event;
+
 void diorama_init()
 {
-	//camera_orbit = vec3(0.0f);
+	kb_event = keybind_subscribe(diorama_keybind_updated);
+
 	camera_orbit = vec3(0.0f, -8.0f, -8.0f);
 	default_camera = transform();
 	default_camera.position = vec3(-1.5f, -8.0f - 3.0f, -8.0f - 1.5f);
@@ -78,7 +66,7 @@ void diorama_init()
 	}
 }
 
-void update()
+void diorama_update()
 {
 	float time = (float)glfwGetTime();
 
@@ -103,22 +91,42 @@ void update()
 	}
 }
 
-void update_input()
+void diorama_keybind_updated(keybind bind)
 {
-	glfwPollEvents();
-
 	vec3 forward = transform_camera.forward();
 	vec3 right = transform_camera.right();
 
-	if (keystate_w == INPUT_HOLD)
-		transform_camera.position = transform_camera.position - forward * 0.1f;
-	if (keystate_a == INPUT_HOLD)
-		transform_camera.position = transform_camera.position + right * 0.1f;
-	if (keystate_s == INPUT_HOLD)
+	if ((bind.state == INPUT_HOLD || bind.state == INPUT_PRESS) && bind.name == "forward")
+		transform_camera.position = transform_camera.position - forward * 0.1f;	
+	if ((bind.state == INPUT_HOLD || bind.state == INPUT_PRESS) && bind.name == "backward")
 		transform_camera.position = transform_camera.position + forward * 0.1f;
-	if (keystate_d == INPUT_HOLD)
+	if ((bind.state == INPUT_HOLD || bind.state == INPUT_PRESS) && bind.name == "left")
+		transform_camera.position = transform_camera.position + right * 0.1f;
+	if ((bind.state == INPUT_HOLD || bind.state == INPUT_PRESS) && bind.name == "right")		
 		transform_camera.position = transform_camera.position - right * 0.1f;
 
+	if (bind.name == "rotate_cw" && bind.state == INPUT_PRESS && !rotating_y)
+	{
+		rotating_y = true;
+		start_rotating_y = transform_camera.rotation.y;
+		desired_rotating_y = transform_camera.rotation.y + 45.0f;
+		start_rotating_time = (float)glfwGetTime();		
+	}
+
+	if (bind.name == "rotate_ccw" && bind.state == INPUT_PRESS && !rotating_y)
+	{
+		rotating_y = true;
+		start_rotating_y = transform_camera.rotation.y;
+		desired_rotating_y = transform_camera.rotation.y - 45.0f;
+		start_rotating_time = (float)glfwGetTime();		
+	}
+}
+
+void diorama_update_input()
+{
+	glfwPollEvents();
+
+/*	
 	if (keystate_z == INPUT_HOLD)
 		transform_camera.position.y += 0.1f;
 	if (keystate_x == INPUT_HOLD)
@@ -174,12 +182,12 @@ void update_input()
 	if (keystate_z == INPUT_RELEASE)
 		keystate_z = INPUT_NONE;
 	if (keystate_x == INPUT_RELEASE)
-		keystate_x = INPUT_NONE;
+		keystate_x = INPUT_NONE;*/
 }
 
 void diorama_key(GLFWwindow *window, int key, int scancode, int action, int mods)
 {
-	if (key == GLFW_KEY_W)
+/*	if (key == GLFW_KEY_W)
 		check_keystate(keystate_w, action);	
 	if (key == GLFW_KEY_A)
 		check_keystate(keystate_a, action);	
@@ -201,18 +209,18 @@ void diorama_key(GLFWwindow *window, int key, int scancode, int action, int mods
 	if (key == GLFW_KEY_R)
 	{
 		transform_camera = default_camera;
-	}
+	}*/
 }
 
 void check_keystate(int &keystate, int action)
 {
-	if (action == GLFW_PRESS)
+	/*if (action == GLFW_PRESS)
 		keystate = INPUT_PRESS;
 	else if (action == GLFW_RELEASE)
-		keystate = INPUT_RELEASE;
+		keystate = INPUT_RELEASE;*/
 }
 	
-void draw()
+void diorama_draw()
 {
 	clear_glerrors();
 

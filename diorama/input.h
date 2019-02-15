@@ -25,6 +25,8 @@ struct keybind_event
 	int index;
 };
 
+keybind_event *keybind_subscribe(void (*keybind_updated)(keybind bind));
+
 void init_input();
 
 void recieve_key_callback(GLFWwindow *window, int key, int scancode, int action, int mods);

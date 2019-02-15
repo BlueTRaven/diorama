@@ -12,6 +12,7 @@ const int INPUT_RELEASE = 3;
 
 struct keybind
 {
+	std::string name;
 	std::string type;
 	int key;	
 
@@ -23,6 +24,7 @@ struct keybind_event
 	void (*keybind_updated)(keybind bind);
 	int index;
 };
+keybind_event *keybind_subscribe(void (*keybind_updated)(keybind bind));
 
 void init_input();
 

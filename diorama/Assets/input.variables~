@@ -7,11 +7,11 @@ key 83;
 declend;
 
 input gameplay left;
-key 65
+key 65;
 declend;
 
 input gameplay right;
-key 68
+key 68;
 declend;
 
 input gameplay rotate_cw;
