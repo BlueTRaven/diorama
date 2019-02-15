@@ -175,7 +175,7 @@ struct vec3
 		return vec3(out.x, out.y, out.z);
 	}
 
-	friend vec3 operator*(const vec3 vector, const mat4x4 matrix)
+	friend vec3 operator*(const mat4x4 matrix, const vec3 vector)
 	{
 		vec4 vec = vec4(vector.x, vector.y, vector.z, 1.0f);
 

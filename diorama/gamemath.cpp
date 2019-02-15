@@ -164,6 +164,11 @@ mat4x4 mat4x4::inverse()
 			this->m[12] * -1, this->m[13] * -1, this->m[14] * -1, this->m[15] * -1);
 }
 
+float lerp(float start, float end, float percent)
+{
+	return (start + percent * (end - start));
+}
+
 float rad_to_deg(float radians)
 {
 	return radians * 57.2958f;

@@ -313,6 +313,10 @@ struct transform
 	mat4x4 matrix();	
 };
 
+float lerp(float start, float end, float percent);
+
+//TODO vector lerp
+
 mat4x4 get_identity();
 
 void compute_screen_coordinates(const float &angle_of_view, const float &aspect_ratio, const float &pers_near, const float &pers_far, float &left, float &right, float &top, float &bottom);
