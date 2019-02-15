@@ -175,15 +175,12 @@ struct vec3
 		return vec3(out.x, out.y, out.z);
 	}
 
-	friend vec4 operator*(mat4x4 matrix, const vec3 vector)
+	friend vec3 operator*(const mat4x4 matrix, const vec3 vector)
 	{
 		vec4 vec = vec4(vector.x, vector.y, vector.z, 1.0f);
 
-		return vec4(
-				vec.x * matrix[0] + vec.x * matrix[1] + vec.x * matrix[2] + vec.x * matrix[3],
-				vec.y * matrix[4] + vec.y * matrix[5] + vec.y * matrix[6] + vec.y * matrix[7],
-				vec.z * matrix[8] + vec.z * matrix[9] + vec.z * matrix[10] + vec.z * matrix[11],
-				vec.w * matrix[12] + vec.w * matrix[13] + vec.w * matrix[14] + vec.w * matrix[15]);
+		vec4 out = matrix * vec;
+		return vec3(out.x, out.y, out.z);
 	}
 
 	vec3 operator+(const vec3 add)
@@ -318,11 +315,9 @@ struct transform
 
 mat4x4 get_identity();
 
-mat4x4 get_perspective(float width, float height, float z_near, float z_far, float fov);
-
 void compute_screen_coordinates(const float &angle_of_view, const float &aspect_ratio, const float &pers_near, const float &pers_far, float &left, float &right, float &top, float &bottom);
 
-mat4x4 get_perspective_2(float left, float right, float top, float bottom, float pers_near, float pers_far);
+mat4x4 get_perspective(float left, float right, float top, float bottom, float pers_near, float pers_far);
 
 mat4x4 get_rotation_x(float degrees);
 

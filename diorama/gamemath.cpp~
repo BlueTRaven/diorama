@@ -45,7 +45,7 @@ mat4x4 get_perspective(float width, float height, float z_near, float z_far, flo
 
 void compute_screen_coordinates(const float &angle_of_view, const float &aspect_ratio, const float &pers_near, const float &pers_far, float &left, float &right, float &top, float &bottom) 
 {
-	float scale = tan(angle_of_view * 0.5f * 3.1415f / 180) * near;
+	float scale = tan(angle_of_view * 0.5f * 3.1415f / 180) * pers_near;
 	right = aspect_ratio * scale, left = -right;
 	top = scale, bottom = -top;
 }
@@ -55,22 +55,22 @@ mat4x4 get_perspective_2(float left, float right, float top, float bottom, float
 	mat4x4 matrix = mat4x4();
 
 	//row 1
-	matrix.m[0] = (2 * near) / (right - left);
+	matrix.m[0] = (2 * pers_near) / (right - left);
 	matrix.m[1] = 0;
 	matrix.m[2] = (right + left) / (right - left);
 	matrix.m[3] = 0;
 
 	//row 2
 	matrix.m[4] = 0;
-	matrix.m[5] = (2 * near) / (top - bottom);
+	matrix.m[5] = (2 * pers_near) / (top - bottom);
 	matrix.m[6] = (top + bottom) / (top - bottom);
 	matrix.m[7] = 0;
 
 	//row 3	
 	matrix.m[8] = 0;
 	matrix.m[9] = 0;
-	matrix.m[10] = -((far + near) / (far - near));
-	matrix.m[11] = -((2 * far * near) / (far - near));
+	matrix.m[10] = -((pers_far + pers_near) / (pers_far - pers_near));
+	matrix.m[11] = -((2 * pers_far * pers_near) / (pers_far - pers_near));
 
 	//row 4	
 	matrix.m[12] = 0;

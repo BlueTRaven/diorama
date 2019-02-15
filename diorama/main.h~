@@ -5,7 +5,7 @@
 
 GLint program_general;
 
-static bool draw_wireframe;
+bool draw_wireframe = true;
 
 void game_loop();
 

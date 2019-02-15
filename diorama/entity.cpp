@@ -1,25 +1,26 @@
 #include <vector>
+#include <math.h>
 
 #include "vertex_handler.h"
 #include "gamemath.h"
 #include "entity.h"
 #include "drawing.h"
-
 #include "gametexture.h"
-
 #include "colors.h"
 
 void entity::init(transform _trans) 
 {
 	this->trans = _trans;
+
+	this->flags = 0;
 }
 
 void entity::update(float time) { }
 
 void entity::draw()
 {
-	if (this->vertices != NULL)
-		draw_vertdata(this->vertices, this->trans);
+	if (this->vert_array != NULL)
+		draw_vertdata(this->vert_array, this->trans);
 }
 
 void cube::init(transform _trans) 
@@ -29,56 +30,111 @@ void cube::init(transform _trans)
 	vertex_array *arr = new vertex_array();
 
 	std::vector<Vertex> vertices;
+	std::vector<unsigned int> indices;
+
 	//front side
 	vertices.push_back(Vertex(vec3(0.0f, 0.0f, 0.0f), vec2(0.0f, 0.0f), WHITE)); 
 	vertices.push_back(Vertex(vec3(1.0f, 0.0f, 0.0f), vec2(1.0f, 0.0f), WHITE));
 	vertices.push_back(Vertex(vec3(0.0f, 1.0f, 0.0f), vec2(0.0f, 1.0f), WHITE));
-
-	vertices.push_back(Vertex(vec3(1.0f, 0.0f, 0.0f), vec2(1.0f, 0.0f), WHITE));
 	vertices.push_back(Vertex(vec3(1.0f, 1.0f, 0.0f), vec2(1.0f, 1.0f), WHITE));
-	vertices.push_back(Vertex(vec3(0.0f, 1.0f, 0.0f), vec2(0.0f, 1.0f), WHITE));
 
+	indices.push_back(0);
+	indices.push_back(1);
+	indices.push_back(2);
+
+	indices.push_back(1);
+	indices.push_back(3);
+	indices.push_back(2);
+
+	add_vertices(arr, vertices, indices, loaded_textures["dirt_grass_side_01"]);
+
+	vertices.clear();
+	indices.clear();
+	
 	//right side
 	vertices.push_back(Vertex(vec3(1.0f, 0.0f, 0.0f), vec2(0.0f, 0.0f), WHITE));
 	vertices.push_back(Vertex(vec3(1.0f, 0.0f, 1.0f), vec2(1.0f, 0.0f), WHITE));
 	vertices.push_back(Vertex(vec3(1.0f, 1.0f, 1.0f), vec2(1.0f, 1.0f), WHITE));
-	
-	vertices.push_back(Vertex(vec3(1.0f, 1.0f, 1.0f), vec2(1.0f, 1.0f), WHITE));
 	vertices.push_back(Vertex(vec3(1.0f, 1.0f, 0.0f), vec2(0.0f, 1.0f), WHITE));
-	vertices.push_back(Vertex(vec3(1.0f, 0.0f, 0.0f), vec2(0.0f, 0.0f), WHITE));
 
+	indices.push_back(4 + 0);
+	indices.push_back(4 + 1);
+	indices.push_back(4 + 2);
+
+	indices.push_back(4 + 2);
+	indices.push_back(4 + 3);
+	indices.push_back(4 + 0);
+	
+	add_vertices(arr, vertices, indices, loaded_textures["dirt_grass_side_01"]);
+
+	vertices.clear();
+	indices.clear();
+	
 	//back side
 	vertices.push_back(Vertex(vec3(1.0f, 0.0f, 1.0f), vec2(0.0f, 0.0f), WHITE));
 	vertices.push_back(Vertex(vec3(0.0f, 0.0f, 1.0f), vec2(1.0f, 0.0f), WHITE));
 	vertices.push_back(Vertex(vec3(0.0f, 1.0f, 1.0f), vec2(1.0f, 1.0f), WHITE));
-
-	vertices.push_back(Vertex(vec3(0.0f, 1.0f, 1.0f), vec2(1.0f, 1.0f), WHITE));
 	vertices.push_back(Vertex(vec3(1.0f, 1.0f, 1.0f), vec2(0.0f, 1.0f), WHITE));
-	vertices.push_back(Vertex(vec3(1.0f, 0.0f, 1.0f), vec2(0.0f, 0.0f), WHITE)); 
 
+	indices.push_back(8 + 0);
+	indices.push_back(8 + 1);
+	indices.push_back(8 + 2);
+
+	indices.push_back(8 + 2);
+	indices.push_back(8 + 3);
+	indices.push_back(8 + 0);
+	
+	add_vertices(arr, vertices, indices, loaded_textures["dirt_grass_side_01"]);
+
+	vertices.clear();
+	indices.clear();
+	
 	//left side
 	vertices.push_back(Vertex(vec3(0.0f, 0.0f, 1.0f), vec2(0.0f, 0.0f), WHITE));
 	vertices.push_back(Vertex(vec3(0.0f, 0.0f, 0.0f), vec2(1.0f, 0.0f), WHITE));
 	vertices.push_back(Vertex(vec3(0.0f, 1.0f, 0.0f), vec2(1.0f, 1.0f), WHITE));
-	
-	vertices.push_back(Vertex(vec3(0.0f, 1.0f, 0.0f), vec2(1.0f, 1.0f), WHITE));
 	vertices.push_back(Vertex(vec3(0.0f, 1.0f, 1.0f), vec2(0.0f, 1.0f), WHITE));
-	vertices.push_back(Vertex(vec3(0.0f, 0.0f, 1.0f), vec2(0.0f, 0.0f), WHITE));
 
-	add_vertices(arr, vertices, loaded_textures["dirt_grass_side_01"]);
+	indices.push_back(12 + 0);
+	indices.push_back(12 + 1);
+	indices.push_back(12 + 2);
+
+	indices.push_back(12 + 2);
+	indices.push_back(12 + 3);
+	indices.push_back(12 + 0);
+	
+	add_vertices(arr, vertices, indices, loaded_textures["dirt_grass_side_01"]);
 
 	vertices.clear();
+	indices.clear();
 
 	vertices.push_back(Vertex(vec3(0.0f, 1.0f, 0.0f), vec2(0.0f, 0.0f), WHITE));	//back left
 	vertices.push_back(Vertex(vec3(1.0f, 1.0f, 1.0f), vec2(1.0f, 1.0f), WHITE));	//front right
 	vertices.push_back(Vertex(vec3(0.0f, 1.0f, 1.0f), vec2(0.0f, 1.0f), WHITE));	//front left
-
-	vertices.push_back(Vertex(vec3(0.0f, 1.0f, 0.0f), vec2(0.0f, 0.0f), WHITE));	//back left
 	vertices.push_back(Vertex(vec3(1.0f, 1.0f, 0.0f), vec2(1.0f, 0.0f), WHITE));	//back right
-	vertices.push_back(Vertex(vec3(1.0f, 1.0f, 1.0f), vec2(1.0f, 1.0f), WHITE));	//front right
 
-	add_vertices(arr, vertices, loaded_textures["grass_01"]);
+	indices.push_back(16 + 0);
+	indices.push_back(16 + 1);
+	indices.push_back(16 + 2);
+
+	indices.push_back(16 + 0);
+	indices.push_back(16 + 3);
+	indices.push_back(16 + 1);
+	
+	add_vertices(arr, vertices, indices, loaded_textures["grass_01"]);
 	create_vertex_array(arr);
 
-	this->vertices = arr;
+	this->vert_array = arr;
+}
+
+void cube::update(float time)
+{
+	if ((flags & SELECTED) == SELECTED)
+	{
+		float period = 4;
+	
+		float percent = fmod(time, period) / period;
+
+		this->vert_array->tint = vec4(percent, 1.0f, 1.0f, 1.0f);
+	}
 }

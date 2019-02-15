@@ -25,8 +25,12 @@ struct vertex_array
 {
 	GLuint vert_array;
 	GLuint vert_buffer;
+	GLuint index_buffer;
+
+	vec4 tint;
 
 	std::vector<Vertex> vertices;
+	std::vector<unsigned int> indices;
 
 	std::vector<vertex_data*> datas;
 	
@@ -34,12 +38,14 @@ struct vertex_array
 	{
 		vert_array = 0;
 		vert_buffer = 0;
+
+		tint = vec4(1.0f);
 	}
 };
 
 void create_vertex_array(vertex_array *arr);
 
-void add_vertices(vertex_array *vert_array, std::vector<Vertex> add_vertices, texture *tex);
+void add_vertices(vertex_array *vert_array, std::vector<Vertex> add_vertices, std::vector<unsigned int> indices, texture *tex);
 
 GLint vertex_attribute(GLint program, const char * name, GLint fields, GLsizei size, void * offset);
 

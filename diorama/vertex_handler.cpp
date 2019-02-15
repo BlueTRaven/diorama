@@ -21,6 +21,10 @@ void create_vertex_array(vertex_array *arr)
 	glBindBuffer(GL_ARRAY_BUFFER, arr->vert_buffer);
 	glBufferData(GL_ARRAY_BUFFER, arr->vertices.size() * sizeof(Vertex), arr->vertices.data(), GL_STATIC_DRAW);
 
+	glGenBuffers(1, &arr->index_buffer);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, arr->index_buffer);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, arr->indices.size() * sizeof(unsigned int), arr->indices.data(), GL_STATIC_DRAW);
+
 	//update the datas to have to correct array
 	for (int i = 0; i < arr->datas.size(); i++)
 		arr->datas[i]->arr = vertex_arrays.size();	
@@ -28,15 +32,20 @@ void create_vertex_array(vertex_array *arr)
 	vertex_arrays.push_back(arr);
 }
 
-void add_vertices(vertex_array *vert_array, std::vector<Vertex> add_vertices, texture *tex)
+void add_vertices(vertex_array *vert_array, std::vector<Vertex> add_vertices, std::vector<unsigned int> indices, texture *tex)
 {
-	int index = vert_array->vertices.size();
+	int index = vert_array->indices.size();
 
-	std::copy(add_vertices.begin(), add_vertices.end(), std::back_inserter(vert_array->vertices));
+	//std::copy(add_vertices.begin(), add_vertices.end(), std::back_inserter(vert_array->vertices));
+
+	for (int i = 0; i < add_vertices.size(); i++)
+		vert_array->vertices.push_back(add_vertices[i]);
+	for (int i = 0; i < indices.size(); i++)
+		vert_array->indices.push_back(indices[i]);
 
 	vertex_data * ret = new vertex_data();
 	ret->start = index; 
-	ret->size = add_vertices.size(); 
+	ret->size = indices.size(); 
 	
 	ret->tex = tex;
 

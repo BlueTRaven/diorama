@@ -11,8 +11,10 @@ extern std::map<std::string, texture*> loaded_textures;
 
 struct entity
 {
+	unsigned int flags;
+
 	transform trans;
-	vertex_array *vertices;
+	vertex_array *vert_array;
 
 	virtual void init(transform _trans);
 
@@ -23,5 +25,9 @@ struct entity
 
 struct cube : entity
 {
+	const int SELECTED = 1 << 0;	//first flag
+
 	virtual void init(transform _trans) override;
+
+	virtual void update(float time) override;
 };
