@@ -89,7 +89,7 @@ void update()
 
 	if (rotating_y)
 	{
-		float period = 0.5f;
+		float period = 0.25f;
 
 		float percent = (time - start_rotating_time) / period;
 
