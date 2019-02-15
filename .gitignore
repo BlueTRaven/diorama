@@ -34,4 +34,7 @@ ee# Prerequisites
 *.db
 *.opendb
 
-ipch
+*.un~
+*.swp
+
+**/ipch/*
