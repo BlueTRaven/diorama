@@ -33,3 +33,5 @@ ee# Prerequisites
 
 *.db
 *.opendb
+
+ipch
