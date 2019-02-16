@@ -176,6 +176,8 @@ void player_init(entity *ent, player *pl)
 	create_vertex_array(arr);
 
 	pl->ent->vert_array = arr;
+
+	camera_follow_entity(pl->ent);		
 }
 
 void player_update(player *pl, float time)
@@ -215,6 +217,8 @@ void player_move_to_tile(player *pl, cube *tiles[MAX_TILES_X][MAX_TILES_Y][MAX_T
 		
 		pl->tile = to_tile;
 		pl->ent->trans.position = to_tile->ent->trans.position;
+
+		camera_follow_entity(pl->ent);		
 	}
 }
 
@@ -225,5 +229,11 @@ bool player_can_move_to_tile(player *pl, cube *tiles[MAX_TILES_X][MAX_TILES_Y][M
 	if (move_to_pos.x >= MAX_TILES_X || move_to_pos.y >= MAX_TILES_Y || move_to_pos.z >= MAX_TILES_Z)
 		return false;
 	
-	return tiles[(int)move_to_pos.x][(int)move_to_pos.y][(int)move_to_pos.z] != NULL; 
+	if (tiles[(int)move_to_pos.x][(int)move_to_pos.y][(int)move_to_pos.z] == NULL)
+		return false;
+
+	cube *tile = tiles[(int)move_to_pos.x][(int)move_to_pos.y][(int)move_to_pos.z];
+	if (tile->type == "air")
+		return true;
+	else return false;
 }

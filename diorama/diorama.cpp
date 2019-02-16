@@ -78,7 +78,8 @@ void diorama_init(std::map<std::string, Decl> cube_types)
 		}
 	}
 
-	set_selected_tile(vec3(1.0f, 2.0f, 1.0f));	
+	if (diorama_state == DIORAMA_STATE_EDITOR)
+		set_selected_tile(vec3(1.0f, 2.0f, 1.0f));	
 }
 
 void diorama_update()
@@ -130,14 +131,17 @@ void diorama_keybind_updated(keybind bind)
 	vec3 forward = camera_transform.forward();
 	vec3 right = camera_transform.right();
 
-	if ((bind.state == INPUT_PRESS) && bind.name == "forward")
-		set_selected_tile(editor_tile_selected->ent->trans.position + vec3(0.0f, 0.0f, -1.0f));
-	if ((bind.state == INPUT_PRESS) && bind.name == "backward")
-		set_selected_tile(editor_tile_selected->ent->trans.position + vec3(0.0f, 0.0f, 1.0f));
-	if ((bind.state == INPUT_PRESS) && bind.name == "left")
-		set_selected_tile(editor_tile_selected->ent->trans.position + vec3(-1.0f, 0.0f, 0.0f));
-	if ((bind.state == INPUT_PRESS) && bind.name == "right")		
-		set_selected_tile(editor_tile_selected->ent->trans.position + vec3(1.0f, 0.0f, 0.0f));
+	if (diorama_state == DIORAMA_STATE_EDITOR)
+	{
+		if ((bind.state == INPUT_PRESS) && bind.name == "forward")
+			set_selected_tile(editor_tile_selected->ent->trans.position + vec3(0.0f, 0.0f, -1.0f));
+		if ((bind.state == INPUT_PRESS) && bind.name == "backward")
+			set_selected_tile(editor_tile_selected->ent->trans.position + vec3(0.0f, 0.0f, 1.0f));
+		if ((bind.state == INPUT_PRESS) && bind.name == "left")
+			set_selected_tile(editor_tile_selected->ent->trans.position + vec3(-1.0f, 0.0f, 0.0f));
+		if ((bind.state == INPUT_PRESS) && bind.name == "right")		
+			set_selected_tile(editor_tile_selected->ent->trans.position + vec3(1.0f, 0.0f, 0.0f));
+	}
 
 	if (bind.name == "rotate_cw" && bind.state == INPUT_PRESS)
 		camera_start_rotating(-1);
