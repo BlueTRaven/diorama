@@ -5,6 +5,7 @@
 #include "gametexture.h"
 #include "input.h"
 #include "camera.h"
+#include "game.h"
 
 #include <map>
 #include <string>
@@ -25,33 +26,35 @@ struct entity
 	transform trans;
 	vertex_array *vert_array;
 
-	virtual void init(transform _trans);
-
-	virtual void update(float time);
-
-	virtual void draw();
-
-	virtual void on_kill();
 };
 
-struct cube : entity
+void entity_init(entity *ent, transform _trans);
+
+void entity_draw(entity *ent);
+
+const int CUBE_SELECTED = 1 << 0;
+struct cube
 {
-	const int SELECTED = 1 << 0;	//first flag
-
-	virtual void init(transform _trans) override;
-
-	virtual void update(float time) override;
+	entity *ent;
 };
 
-struct player : entity
+void cube_init(entity *ent, cube *c);
+
+void cube_update(cube *c, float time);
+
+struct player
 {
+	entity *ent;
 	keybind_event *kb_event;
 
-	virtual void init(transform _trans) override;
-
-	virtual void update(float time) override;
-
-	virtual void on_kill() override;
+	cube *tile;
 };
 
-static void keybind_updated(entity *e, keybind bind);
+void player_init(entity *ent, player *pl);
+
+void player_update(player *pl, float time);
+
+void player_keybind_updated(player *pl, cube *tiles[MAX_TILES_X][MAX_TILES_Y][MAX_TILES_Z], keybind bind);
+
+void player_can_move_to_tile(player *pl, cube *tiles[MAX_TILES_X][MAX_TILES_Y][MAX_TILES_Z], cube *to_tile);
+

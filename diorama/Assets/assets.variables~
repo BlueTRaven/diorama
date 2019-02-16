@@ -15,6 +15,10 @@ walk_sound Assets/sounds/dirt_walk_01.wav;
 destroy_sound; dirt_walk_01;
 declend;
 
+asset texture dirt_grass_side_01:
+location Assets/textures/dirt_grass_side_01.png;
+declend;
+
 asset texture grass_01:
 location Assets/textures/grass_01.png;
 walk_sound Assets/sounds/grass_walk_01.wav;
@@ -29,10 +33,10 @@ pitch_max 0.55;
 declend;
 
 asset mdl_cube dirt_01:
-side_n dirt_01;
-side_s dirt_01;
-side_e dirt_01;
-side_w dirt_01;
+side_n dirt_grass_side_01;
+side_s dirt_grass_side_01;
+side_e dirt_grass_side_01;
+side_w dirt_grass_side_01;
 side_u grass_01;
 #no bottom side for cubes, since we'll never see it
 declend;

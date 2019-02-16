@@ -16,12 +16,17 @@ extern GLint program_general;
 
 extern transform camera_transform;
 
+const static int MAX_TILES_X = 10;
+const static int MAX_TILES_Y = 10;
+const static int MAX_TILES_Z = 10;
+
 void diorama_init();
 
 void diorama_draw();
 void draw_world(int width, int height, float ratio);
 
 void diorama_keybind_updated(keybind bind);
+void diorama_player_keybind_updated(keybind bind);
 
 void diorama_update();
 
@@ -30,5 +35,6 @@ bool is_valid_tile(vec3 position);
 
 int create_entity(entity *ent, transform trans);
 
-void sort_entities();
-bool get_sort_entities(const entity *i, const entity *j);
+void create_cube(entity *ent, cube *c);
+
+void create_player(entity *ent, player *_pl);

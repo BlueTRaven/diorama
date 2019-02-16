@@ -9,29 +9,31 @@
 #include "drawing.h"
 #include "input.h"
 #include "camera.h"
+#include "game.h"
 
 #include <stdio.h>
 
 #include <vector>
 #include <algorithm>
 
-std::vector<entity*> entities;
-
 static float timescale = 1.0f;
 
-const static int MAX_TILES_X = 10;
-const static int MAX_TILES_Y = 10;
-const static int MAX_TILES_Z = 10;
+std::vector<entity*> entities;
 
 cube *tiles[MAX_TILES_X][MAX_TILES_Y][MAX_TILES_Z];
+cube *editor_tile_selected;
 
-cube *selected;
+player *pl;
 
 keybind_event *kb_event;
+keybind_event *player_kb_event;
 
 void diorama_init()
 {
+	diorama_state = DIORAMA_STATE_GAME;
+
 	kb_event = keybind_subscribe(diorama_keybind_updated);
+	player_kb_event = keybind_subscribe(diorama_player_keybind_updated);
 
 	transform default_camera = transform();
 	default_camera.position = vec3(-1.5f, -8.0f - 3.0f, -8.0f - 1.5f);
@@ -40,7 +42,11 @@ void diorama_init()
 
 	camera_init(default_camera);
 
-	create_entity(new player(), transform(vec3(1.0f, 3.0f, 1.0f), vec3(0.0f), vec3(1.0f)));
+	entity *ent = new entity();
+	player *pl = new player();
+
+	create_entity(ent, transform(vec3(1.0f, 3.0f, 1.0f), vec3(0.0f), vec3(1.0f)));
+	create_player(ent, pl);
 
 	for (int x = 0; x < 3; x++)
 	{
@@ -59,10 +65,11 @@ void diorama_init()
 		{
 			for (int z = 0; z < 3; z++)
 			{
+				ent = new entity();
+				create_entity(ent, transform(vec3(x, y, z), vec3(0.0f), vec3(1.0f)));
+				
 				cube *c = new cube();
-				create_entity(c, transform(vec3(x, y, z), vec3(0.0f), vec3(1.0f)));
-
-				tiles[x][y][z] = c;
+				create_cube(ent, c);
 			}
 		}
 	}
@@ -74,10 +81,19 @@ void diorama_update()
 {
 	float time = (float)glfwGetTime();
 
-	for (int i = 0; i < entities.size(); i++)
+	for (int x = 0; x < 3; x++)
 	{
-		entities[i]->update(time);
+		for (int y = 0; y < 3; y++)
+		{
+			for (int z = 0; z < 3; z++)
+			{
+				if (is_valid_tile(vec3(x, y, z)))
+					cube_update(tiles[x][y][z], time);
+			}
+		}
 	}
+
+	player_update(pl, time);
 
 	camera_update(time);
 }
@@ -96,12 +112,12 @@ void set_selected_tile(vec3 position)
 {
 	if (is_valid_tile(position))
 	{
-		if (selected != NULL)
-			selected->flags = selected->flags & ~selected->SELECTED;
-		selected = tiles[(int)position.x][(int)position.y][(int)position.z];
-		selected->flags |= selected->SELECTED;
+		if (editor_tile_selected != NULL)
+			editor_tile_selected->ent->flags = editor_tile_selected->ent->flags & ~CUBE_SELECTED;
+		editor_tile_selected = tiles[(int)position.x][(int)position.y][(int)position.z];
+		editor_tile_selected->ent->flags |= CUBE_SELECTED;
 
-		camera_follow_entity(selected);
+		camera_follow_entity(editor_tile_selected->ent);
 	}
 }
 
@@ -111,19 +127,24 @@ void diorama_keybind_updated(keybind bind)
 	vec3 right = camera_transform.right();
 
 	if ((bind.state == INPUT_PRESS) && bind.name == "forward")
-		set_selected_tile(selected->trans.position + vec3(0.0f, 0.0f, -1.0f));
+		set_selected_tile(editor_tile_selected->ent->trans.position + vec3(0.0f, 0.0f, -1.0f));
 	if ((bind.state == INPUT_PRESS) && bind.name == "backward")
-		set_selected_tile(selected->trans.position + vec3(0.0f, 0.0f, 1.0f));
+		set_selected_tile(editor_tile_selected->ent->trans.position + vec3(0.0f, 0.0f, 1.0f));
 	if ((bind.state == INPUT_PRESS) && bind.name == "left")
-		set_selected_tile(selected->trans.position + vec3(-1.0f, 0.0f, 0.0f));
+		set_selected_tile(editor_tile_selected->ent->trans.position + vec3(-1.0f, 0.0f, 0.0f));
 	if ((bind.state == INPUT_PRESS) && bind.name == "right")		
-		set_selected_tile(selected->trans.position + vec3(1.0f, 0.0f, 0.0f));
+		set_selected_tile(editor_tile_selected->ent->trans.position + vec3(1.0f, 0.0f, 0.0f));
 
 	if (bind.name == "rotate_cw" && bind.state == INPUT_PRESS)
 		camera_start_rotating(-1);
 
 	if (bind.name == "rotate_ccw" && bind.state == INPUT_PRESS)
 		camera_start_rotating(1);
+}
+
+void diorama_player_keybind_updated(keybind bind)
+{
+	player_keybind_updated(pl, tiles, bind);
 }
 
 void diorama_draw()
@@ -169,9 +190,7 @@ void draw_world(int width, int height, float ratio)
 	glEnable(GL_MULTISAMPLE);
 
 	for (int i = 0; i < entities.size(); i++)
-	{
-		entities[i]->draw();
-	}
+		entity_draw(entities[i]);
 
 	printf_glerrors();	
 }
@@ -180,7 +199,19 @@ int create_entity(entity *ent, transform trans)
 {
 	entities.push_back(ent);
 
-	ent->init(trans);
+	entity_init(ent, trans);
 
 	return entities.size() - 1;
+}
+
+void create_cube(entity *ent, cube *c)
+{
+	tiles[(int)ent->trans.position.x][(int)ent->trans.position.y][(int)ent->trans.position.z] = c;
+	cube_init(ent, c);
+}
+
+void create_player(entity *ent, player *_pl)
+{
+	pl = _pl;
+	player_init(ent, pl);
 }

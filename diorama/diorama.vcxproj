@@ -196,6 +196,7 @@
     <ClInclude Include="diorama.h" />
     <ClInclude Include="drawing.h" />
     <ClInclude Include="entity.h" />
+    <ClInclude Include="game.h" />
     <ClInclude Include="gamemath.h" />
     <ClInclude Include="gametexture.h" />
     <ClInclude Include="input.h" />

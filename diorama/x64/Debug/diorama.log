@@ -1,27 +1,9 @@
 ﻿  camera.cpp
   diorama.cpp
-c:\users\taylor\documents\programming\c++\diorama\diorama\diorama.cpp(63): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-c:\users\taylor\documents\programming\c++\diorama\diorama\diorama.cpp(185): warning C4267: 'return': conversion from 'size_t' to 'int', possible loss of data
+c:\users\taylor\documents\programming\c++\diorama\diorama\diorama.cpp(69): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+c:\users\taylor\documents\programming\c++\diorama\diorama\diorama.cpp(90): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+c:\users\taylor\documents\programming\c++\diorama\diorama\diorama.cpp(204): warning C4267: 'return': conversion from 'size_t' to 'int', possible loss of data
   entity.cpp
-c:\users\taylor\documents\programming\c++\diorama\diorama\entity.cpp(148): error C3493: 'this' cannot be implicitly captured because no default capture mode has been specified
-c:\users\taylor\documents\programming\c++\diorama\diorama\entity.cpp(148): error C2664: 'void player::keybind_updated(entity *,keybind)': cannot convert argument 1 from 'const player::init::<lambda_315805e6fb80365a64d5bf2818f770d6> *' to 'entity *'
-  c:\users\taylor\documents\programming\c++\diorama\diorama\entity.cpp(148): note: Types pointed to are unrelated; conversion requires reinterpret_cast, C-style cast or function-style cast
-c:\users\taylor\documents\programming\c++\diorama\diorama\entity.cpp(148): error C2355: 'this': can only be referenced inside non-static member functions or non-static data member initializers
-c:\users\taylor\documents\programming\c++\diorama\diorama\entity.cpp(180): error C2355: 'this': can only be referenced inside non-static member functions or non-static data member initializers
-c:\users\taylor\documents\programming\c++\diorama\diorama\entity.cpp(180): error C2227: left of '->trans' must point to class/struct/union/generic type
-c:\users\taylor\documents\programming\c++\diorama\diorama\entity.cpp(180): error C2228: left of '.position' must have class/struct/union
-c:\users\taylor\documents\programming\c++\diorama\diorama\entity.cpp(180): error C2228: left of '.z' must have class/struct/union
-c:\users\taylor\documents\programming\c++\diorama\diorama\entity.cpp(182): error C2355: 'this': can only be referenced inside non-static member functions or non-static data member initializers
-c:\users\taylor\documents\programming\c++\diorama\diorama\entity.cpp(182): error C2227: left of '->trans' must point to class/struct/union/generic type
-c:\users\taylor\documents\programming\c++\diorama\diorama\entity.cpp(182): error C2228: left of '.position' must have class/struct/union
-c:\users\taylor\documents\programming\c++\diorama\diorama\entity.cpp(182): error C2228: left of '.z' must have class/struct/union
-c:\users\taylor\documents\programming\c++\diorama\diorama\entity.cpp(184): error C2355: 'this': can only be referenced inside non-static member functions or non-static data member initializers
-c:\users\taylor\documents\programming\c++\diorama\diorama\entity.cpp(184): error C2227: left of '->trans' must point to class/struct/union/generic type
-c:\users\taylor\documents\programming\c++\diorama\diorama\entity.cpp(184): error C2228: left of '.position' must have class/struct/union
-c:\users\taylor\documents\programming\c++\diorama\diorama\entity.cpp(184): error C2228: left of '.x' must have class/struct/union
-c:\users\taylor\documents\programming\c++\diorama\diorama\entity.cpp(186): error C2355: 'this': can only be referenced inside non-static member functions or non-static data member initializers
-c:\users\taylor\documents\programming\c++\diorama\diorama\entity.cpp(186): error C2227: left of '->trans' must point to class/struct/union/generic type
-c:\users\taylor\documents\programming\c++\diorama\diorama\entity.cpp(186): error C2228: left of '.position' must have class/struct/union
-c:\users\taylor\documents\programming\c++\diorama\diorama\entity.cpp(186): error C2228: left of '.x' must have class/struct/union
   main.cpp
   Generating Code...
+  diorama.vcxproj -> C:\Users\Taylor\Documents\Programming\C++\diorama\x64\Debug\diorama.exe

@@ -9,27 +9,24 @@
 #include "colors.h"
 #include "input.h"
 #include "camera.h"
+#include "game.h"
 
-void entity::init(transform _trans) 
+void entity_init(entity *ent, transform _trans) 
 {
-	this->trans = _trans;
+	ent->trans = _trans;
 
-	this->flags = 0;
+	ent->flags = 0;
 }
 
-void entity::update(float time) { }
-
-void entity::draw()
+void entity_draw(entity *ent)
 {
-	if (this->vert_array != NULL)
-		draw_vertdata(this->vert_array, this->trans);
+	if (ent->vert_array != NULL)
+		draw_vertdata(ent->vert_array, ent->trans);
 }
 
-void entity::on_kill() { }
-
-void cube::init(transform _trans) 
+void cube_init(entity *ent, cube *c) 
 {
-	entity::init(_trans);
+	c->ent = ent;
 
 	vertex_array *arr = new vertex_array();
 
@@ -128,20 +125,20 @@ void cube::init(transform _trans)
 	add_vertices(arr, vertices, indices, loaded_textures["grass_01"]);
 	create_vertex_array(arr);
 
-	this->vert_array = arr;
+	c->ent->vert_array = arr;
 }
 
-void cube::update(float time)
+void cube_update(cube *c, float time)
 {
-	if ((flags & SELECTED) == SELECTED)
-		this->vert_array->draw_flags |= this->vert_array->DRAW_WIREFRAME;
+	if ((c->ent->flags & CUBE_SELECTED) == CUBE_SELECTED)
+		c->ent->vert_array->draw_flags |= c->ent->vert_array->DRAW_WIREFRAME;
 	else
-		this->vert_array->draw_flags = this->vert_array->draw_flags & ~this->vert_array->DRAW_WIREFRAME;
+		c->ent->vert_array->draw_flags = c->ent->vert_array->draw_flags & ~c->ent->vert_array->DRAW_WIREFRAME;
 }
 
-void player::init(transform _trans)
+void player_init(entity *ent, player *pl)
 {
-	entity::init(_trans);
+	pl->ent = ent;
 
 	vertex_array *arr = new vertex_array();
 
@@ -166,30 +163,34 @@ void player::init(transform _trans)
 
 	create_vertex_array(arr);
 
-	this->vert_array = arr;
+	pl->ent->vert_array = arr;
 }
 
-void player::update(float time)
+void player_update(player *pl, float time)
 {
-	this->trans.origin = this->trans.position * -1 - vec3(0.5f);
-	this->trans.rotation.y = camera_transform.rotation.y;
+	pl->ent->trans.origin = pl->ent->trans.position * -1 - vec3(0.5f);
+	pl->ent->trans.rotation.y = camera_transform.rotation.y;
 }
 
-void player::on_kill()
-{
 
-}
-
-static void keybind_updated(entity *e, keybind bind)
+void player_keybind_updated(player *pl, cube *tiles[MAX_TILES_X][MAX_TILES_Y][MAX_TILES_Z], keybind bind)
 {
-	if (typeof(e) == typeof(player)
 	if ((bind.state == INPUT_PRESS) && bind.name == "forward")
-		e->trans.position.z += 1;
+		pl->ent->trans.position.z -= 1;
 	if ((bind.state == INPUT_PRESS) && bind.name == "backward")
-		e->trans.position.z -= 1;
+		pl->ent->trans.position.z += 1;
 	if ((bind.state == INPUT_PRESS) && bind.name == "left")
-		e->trans.position.x -= 1;
+		pl->ent->trans.position.x -= 1;
 	if ((bind.state == INPUT_PRESS) && bind.name == "right")		
-		e->trans.position.x += 1;
+		pl->ent->trans.position.x += 1;
 }
 
+void player_move_to_tile(player *pl, cube *tiles[MAX_TILES_X][MAX_TILES_Y][MAX_TILES_Z], cube *to_tile)
+{
+
+}
+
+bool player_can_move_to_tile(player *pl, cube *tiles[MAX_TILES_X][MAX_TILES_Y][MAX_TILES_Z], cube *to_tile)
+{
+	return tiles[(int)to_tile->ent->trans.position.x][(int)to_tile->ent->trans.position.y][(int)to_tile->ent->trans.position.z] != NULL; 
+}
