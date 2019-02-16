@@ -52,6 +52,6 @@ struct player : entity
 	virtual void update(float time) override;
 
 	virtual void on_kill() override;
-
-	static void keybind_updated(keybind bind);
 };
+
+static void keybind_updated(entity *e, keybind bind);

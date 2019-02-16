@@ -143,8 +143,6 @@ void player::init(transform _trans)
 {
 	entity::init(_trans);
 
-	this->kb_event = keybind_subscribe(&player::keybind_updated);
-
 	vertex_array *arr = new vertex_array();
 
 	std::vector<Vertex> vertices;
@@ -171,18 +169,6 @@ void player::init(transform _trans)
 	this->vert_array = arr;
 }
 
-void player::keybind_updated(keybind bind)
-{
-	if ((bind.state == INPUT_PRESS) && bind.name == "forward")
-		this->trans.position.z += 1;
-	if ((bind.state == INPUT_PRESS) && bind.name == "backward")
-		this->trans.position.z -= 1;
-	if ((bind.state == INPUT_PRESS) && bind.name == "left")
-		this->trans.position.x -= 1;
-	if ((bind.state == INPUT_PRESS) && bind.name == "right")		
-		this->trans.position.x += 1;
-}
-
 void player::update(float time)
 {
 	this->trans.origin = this->trans.position * -1 - vec3(0.5f);
@@ -193,3 +179,17 @@ void player::on_kill()
 {
 
 }
+
+static void keybind_updated(entity *e, keybind bind)
+{
+	if (typeof(e) == typeof(player))
+	if ((bind.state == INPUT_PRESS) && bind.name == "forward")
+		e->trans.position.z += 1;
+	if ((bind.state == INPUT_PRESS) && bind.name == "backward")
+		e->trans.position.z -= 1;
+	if ((bind.state == INPUT_PRESS) && bind.name == "left")
+		e->trans.position.x -= 1;
+	if ((bind.state == INPUT_PRESS) && bind.name == "right")		
+		e->trans.position.x += 1;
+}
+

@@ -4,11 +4,14 @@
 #include "vertex_handler.h"
 #include "gametexture.h"
 #include "input.h"
+#include "camera.h"
 
 #include <map>
 #include <string>
 
 extern std::map<std::string, texture*> loaded_textures;
+
+extern transform camera_transform;
 
 struct entity
 {
