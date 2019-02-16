@@ -36,9 +36,11 @@ const int CUBE_SELECTED = 1 << 0;
 struct cube
 {
 	entity *ent;
+
+	std::string type;
 };
 
-void cube_init(entity *ent, cube *c);
+void cube_init(entity *ent, cube *c, Decl cube_asset);
 
 void cube_update(cube *c, float time);
 
@@ -56,5 +58,7 @@ void player_update(player *pl, float time);
 
 void player_keybind_updated(player *pl, cube *tiles[MAX_TILES_X][MAX_TILES_Y][MAX_TILES_Z], keybind bind);
 
-void player_can_move_to_tile(player *pl, cube *tiles[MAX_TILES_X][MAX_TILES_Y][MAX_TILES_Z], cube *to_tile);
+void player_move_to_tile(player *pl, cube *tiles[MAX_TILES_X][MAX_TILES_Y][MAX_TILES_Z], vec3 move_to_pos);
+
+bool player_can_move_to_tile(player *pl, cube *tiles[MAX_TILES_X][MAX_TILES_Y][MAX_TILES_Z], vec3 move_to_pos);
 

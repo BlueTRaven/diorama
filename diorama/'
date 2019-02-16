@@ -188,42 +188,25 @@ void player_update(player *pl, float time)
 void player_keybind_updated(player *pl, cube *tiles[MAX_TILES_X][MAX_TILES_Y][MAX_TILES_Z], keybind bind)
 {
 	vec3 move_to_pos;
-	
-	if (bind.state == INPUT_PRESS)
-	{
-		if (bind.name == "forward")
-			move_to_pos = vec3(0.0f, 0.0f, -1.0f);
-		if (bind.name == "backward")
-			move_to_pos = vec3(0.0f, 0.0f, 1.0f);
-		if (bind.name == "left")
-			move_to_pos = vec3(-1.0f, 0.0f, 0.0f);		
-		if (bind.name == "right")		
-			move_to_pos = vec3(1.0f, 0.0f, 0.0f);
 
-		if (move_to_pos.length() > 0)
-			player_move_to_tile(pl, tiles, move_to_pos);
-	}
+	if ((bind.state == INPUT_PRESS) && bind.name == "forward")
+		move_to_pos = pl->ent->trans.position + vec3(0.0f, 0.0f, -1.0f);
+	if ((bind.state == INPUT_PRESS) && bind.name == "backward")
+		move_to_pos = pl->ent->trans.position + vec3(0.0f, 0.0f, 1.0f);
+	if ((bind.state == INPUT_PRESS) && bind.name == "left")
+		move_to_pos = pl->ent->trans.position + vec3(-1.0f, 0.0f, 0.0f);		
+	if ((bind.state == INPUT_PRESS) && bind.name == "right")		
+		move_to_pos = pl->ent->trans.position + vec3(1.0f, 0.0f, 0.0f);
+
+	player_move_to_tile(pl, tiles, );
 }
 
-void player_move_to_tile(player *pl, cube *tiles[MAX_TILES_X][MAX_TILES_Y][MAX_TILES_Z], vec3 move_to_pos)
+void player_move_to_tile(player *pl, cube *tiles[MAX_TILES_X][MAX_TILES_Y][MAX_TILES_Z], cube *to_tile)
 {
-	move_to_pos = move_to_pos + pl->ent->trans.position; 
 
-	if (player_can_move_to_tile(pl, tiles, move_to_pos))
-	{
-		cube *to_tile = tiles[(int)move_to_pos.x][(int)move_to_pos.y][(int)move_to_pos.z];
-		
-		pl->tile = to_tile;
-		pl->ent->trans.position = to_tile->ent->trans.position;
-	}
 }
 
-bool player_can_move_to_tile(player *pl, cube *tiles[MAX_TILES_X][MAX_TILES_Y][MAX_TILES_Z], vec3 move_to_pos)
+bool player_can_move_to_tile(player *pl, cube *tiles[MAX_TILES_X][MAX_TILES_Y][MAX_TILES_Z], cube *to_tile)
 {
-	if (move_to_pos.x < 0 || move_to_pos.y < 0 || move_to_pos.z < 0)
-		return false;
-	if (move_to_pos.x >= MAX_TILES_X || move_to_pos.y >= MAX_TILES_Y || move_to_pos.z >= MAX_TILES_Z)
-		return false;
-	
-	return tiles[(int)move_to_pos.x][(int)move_to_pos.y][(int)move_to_pos.z] != NULL; 
+	return tiles[(int)to_tile->ent->trans.position.x][(int)to_tile->ent->trans.position.y][(int)to_tile->ent->trans.position.z] != NULL; 
 }

@@ -1,9 +1,2 @@
-﻿  camera.cpp
-  diorama.cpp
-c:\users\taylor\documents\programming\c++\diorama\diorama\diorama.cpp(69): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-c:\users\taylor\documents\programming\c++\diorama\diorama\diorama.cpp(90): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-c:\users\taylor\documents\programming\c++\diorama\diorama\diorama.cpp(204): warning C4267: 'return': conversion from 'size_t' to 'int', possible loss of data
-  entity.cpp
-  main.cpp
-  Generating Code...
+﻿  entity.cpp
   diorama.vcxproj -> C:\Users\Taylor\Documents\Programming\C++\diorama\x64\Debug\diorama.exe

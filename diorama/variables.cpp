@@ -181,6 +181,18 @@ vector<Decl> get_all_decl_of_type(string type, vector<Decl> declarations)
 	return output;
 }
 
+std::map<std::string, Decl> get_map_of_type(std::string type, std::vector<Decl> declarations)
+{
+	map<std::string, Decl> output;
+
+	for (int i = 0; i < declarations.size(); i++)
+	{
+		if (declarations[i].subtype == type)
+			output.insert(std::pair<std::string, Decl>(declarations[i].name, declarations[i]));
+	}
+
+	return output;
+}
 
 
 

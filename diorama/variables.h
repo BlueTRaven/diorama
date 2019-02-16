@@ -30,3 +30,5 @@ std::string get_end_token(std::vector<std::string> &tokens);
 void infer_param_type(Decl_Parameter &param);
 
 std::vector<Decl> get_all_decl_of_type(std::string type, std::vector<Decl> declarations);
+
+std::map<std::string, Decl> get_map_of_type(std::string type, std::vector<Decl> declarations);

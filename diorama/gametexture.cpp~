@@ -13,11 +13,19 @@
 #include "logging.h"
 #include "gametexture.h"
 
+bool gametexture_initialized = false;
+
 std::map<std::string, texture*> loaded_textures;
 
 //loads and returns a texture. if the texture is already loaded, it does not re-load it.
 texture* load_get_texture(std::string tex_name)
 {
+	if (!gametexture_initialized)
+	{
+		loaded_textures = std::map<std::string, texture*>();
+		gametexture_initialized = true;
+	}
+
 	if (loaded_textures.find(tex_name) != loaded_textures.end())
 	{
 		//texture has been found; return it
@@ -28,6 +36,7 @@ texture* load_get_texture(std::string tex_name)
 		//texture could not be found; load it
 		if (!load_texture(tex_name))
 			printf("Could not load texture %s.\n", tex_name.c_str());
+		else printf("Texture %s loaded.\n", tex_name.c_str());
 	}
 }
 

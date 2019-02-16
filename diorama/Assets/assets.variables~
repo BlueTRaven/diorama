@@ -32,6 +32,14 @@ pitch_min 0.45;
 pitch_max 0.55;
 declend;
 
+asset cube air:
+side_n none;
+side_s none;
+side_e none;
+side_w none;
+side_u none;
+declend;
+
 asset mdl_cube dirt_01:
 side_n dirt_grass_side_01;
 side_s dirt_grass_side_01;

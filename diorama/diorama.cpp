@@ -28,7 +28,7 @@ player *pl;
 keybind_event *kb_event;
 keybind_event *player_kb_event;
 
-void diorama_init()
+void diorama_init(std::map<std::string, Decl> cube_types)
 {
 	diorama_state = DIORAMA_STATE_GAME;
 
@@ -48,13 +48,17 @@ void diorama_init()
 	create_entity(ent, transform(vec3(1.0f, 3.0f, 1.0f), vec3(0.0f), vec3(1.0f)));
 	create_player(ent, pl);
 
-	for (int x = 0; x < 3; x++)
+	for (int x = 0; x < MAX_TILES_X; x++)
 	{
-		for (int y = 0; y < 3; y++)
+		for (int y = 0; y < MAX_TILES_Y; y++)
 		{
-			for (int z = 0; z < 3; z++)
-			{
-				tiles[x][y][z] = NULL; //init all tiles to null
+			for (int z = 0; z < MAX_TILES_Z; z++)
+			{	//init all tiles to air.
+				ent = new entity();
+				create_entity(ent, transform(vec3(x, y, z), vec3(0.0f), vec3(1.0f)));
+				
+				cube *c = new cube();
+				create_cube(ent, c, cube_types["air"]);
 			}
 		}
 	}
@@ -69,7 +73,7 @@ void diorama_init()
 				create_entity(ent, transform(vec3(x, y, z), vec3(0.0f), vec3(1.0f)));
 				
 				cube *c = new cube();
-				create_cube(ent, c);
+				create_cube(ent, c, cube_types["grass_01"]);
 			}
 		}
 	}
@@ -204,10 +208,13 @@ int create_entity(entity *ent, transform trans)
 	return entities.size() - 1;
 }
 
-void create_cube(entity *ent, cube *c)
+void create_cube(entity *ent, cube *c, Decl cube_asset)
 {
+	if (is_valid_tile(ent->trans.position))
+		delete tiles[(int)ent->trans.position.x][(int)ent->trans.position.y][(int)ent->trans.position.z]; 
+
 	tiles[(int)ent->trans.position.x][(int)ent->trans.position.y][(int)ent->trans.position.z] = c;
-	cube_init(ent, c);
+	cube_init(ent, c, cube_asset);
 }
 
 void create_player(entity *ent, player *_pl)
