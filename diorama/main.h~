@@ -5,7 +5,9 @@
 
 GLint program_general;
 
-bool draw_wireframe = true;
+bool draw_wireframe;
+
+void shader_create_general(std::vector<Decl> assets);
 
 void game_loop();
 

@@ -7,6 +7,8 @@ GLint program_general;
 
 bool draw_wireframe;
 
+void shader_create_general(std::vector<Decl> assets);
+
 void game_loop();
 
 void error_callback(int error, const char* description);

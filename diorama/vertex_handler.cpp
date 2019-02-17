@@ -9,9 +9,28 @@
 
 std::vector<vertex_array*> vertex_arrays; 
 
-//create vertex array: new vertex_array();
-//create Vertices, pass with array to add_vertices
-//call this function
+//create a quad - a rectangle - from point a to point b.
+void create_quad(vertex_array *vert_array, int index_offset, texture *tex, vec4 color, vec3 a, vec3 b)
+{
+	std::vector<Vertex> vertices;
+	std::vector<unsigned int> indices;
+
+	vertices.push_back(Vertex(vec3(1.0f, 0.0f, 1.0f), vec2(0.0f, 0.0f), color));
+	vertices.push_back(Vertex(vec3(0.0f, 0.0f, 1.0f), vec2(1.0f, 0.0f), color));
+	vertices.push_back(Vertex(vec3(0.0f, 1.0f, 1.0f), vec2(1.0f, 1.0f), color));
+	vertices.push_back(Vertex(vec3(1.0f, 1.0f, 1.0f), vec2(0.0f, 1.0f), color));
+
+	indices.push_back(index_offset + 0);
+	indices.push_back(index_offset + 1);
+	indices.push_back(index_offset + 2);
+
+	indices.push_back(index_offset + 2);
+	indices.push_back(index_offset + 3);
+	indices.push_back(index_offset + 0);
+	
+	add_vertices(vert_array, vertices, indices, tex); 
+}
+
 void create_vertex_array(vertex_array *arr)
 {
 	glGenVertexArrays(1, &arr->vert_array);

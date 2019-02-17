@@ -176,16 +176,30 @@ void player_init(entity *ent, player *pl)
 	create_vertex_array(arr);
 
 	pl->ent->vert_array = arr;
+
+	camera_follow_entity(pl->ent);		
 }
 
 void player_update(player *pl, float time)
 {
 	pl->ent->trans.origin = pl->ent->trans.position * -1 - vec3(0.5f);
 	pl->ent->trans.rotation.y = camera_transform.rotation.y;
+
+	if (pl->is_lerp)
+	{
+		float percent = (time - pl->lerp_start_time) / PLAYER_LERP_TIME;
+		pl->ent->trans.position = vec3_lerp(pl->lerp_start, pl->lerp_end, percent);
+
+			camera_follow_entity(pl->ent);					
+		if (percent >= 0.99f)
+		{
+			pl->ent->trans.position = pl->lerp_end;
+			pl->is_lerp = false;
+		}
+	}
 }
 
-
-void player_keybind_updated(player *pl, cube *tiles[MAX_TILES_X][MAX_TILES_Y][MAX_TILES_Z], keybind bind)
+void player_keybind_updated(player *pl, float time, cube *tiles[MAX_TILES_X][MAX_TILES_Y][MAX_TILES_Z], keybind bind)
 {
 	vec3 move_to_pos;
 	
@@ -201,26 +215,99 @@ void player_keybind_updated(player *pl, cube *tiles[MAX_TILES_X][MAX_TILES_Y][MA
 			move_to_pos = vec3(1.0f, 0.0f, 0.0f);
 
 		if (move_to_pos.length() > 0)
-			player_move_to_tile(pl, tiles, move_to_pos);
+			player_move_to_tile(pl, time, tiles, move_to_pos);
 	}
 }
 
-void player_move_to_tile(player *pl, cube *tiles[MAX_TILES_X][MAX_TILES_Y][MAX_TILES_Z], vec3 move_to_pos)
+void player_move_to_tile(player *pl, float time, cube *tiles[MAX_TILES_X][MAX_TILES_Y][MAX_TILES_Z], vec3 move_to_pos)
 {
 	move_to_pos = move_to_pos + pl->ent->trans.position; 
 
-	if (player_can_move_to_tile(pl, tiles, move_to_pos))
-	{
-		cube *to_tile = tiles[(int)move_to_pos.x][(int)move_to_pos.y][(int)move_to_pos.z];
-		
-		pl->tile = to_tile;
-		pl->ent->trans.position = to_tile->ent->trans.position;
+	int player_can_move = player_can_move_to_tile(pl, tiles, move_to_pos);
 
-		camera_follow_entity(pl->ent);		
+	if (player_can_move != PLAYER_CANNOT_MOVE)
+	{
+		cube *to_tile = NULL;
+
+		if (player_can_move == PLAYER_CAN_MOVE_UP)
+			to_tile = tiles[(int)move_to_pos.x][(int)move_to_pos.y + 1][(int)move_to_pos.z]; 
+		else if (player_can_move == PLAYER_CAN_MOVE_DOWN)
+			to_tile = tiles[(int)move_to_pos.x][(int)move_to_pos.y - 1][(int)move_to_pos.z]; 
+		else if (player_can_move == PLAYER_CAN_MOVE)
+			to_tile = tiles[(int)move_to_pos.x][(int)move_to_pos.y][(int)move_to_pos.z]; 
+
+		if (to_tile == NULL)
+			printf("something went wrong with the walk system.");
+
+		player_begin_lerp(pl, pl->ent->trans.position, to_tile->ent->trans.position, time);
+
+		pl->tile = to_tile;
 	}
 }
 
-bool player_can_move_to_tile(player *pl, cube *tiles[MAX_TILES_X][MAX_TILES_Y][MAX_TILES_Z], vec3 move_to_pos)
+int player_can_move_to_tile(player *pl, cube *tiles[MAX_TILES_X][MAX_TILES_Y][MAX_TILES_Z], vec3 move_to_pos)
+{
+	if (!player_is_valid_tile(tiles, move_to_pos))
+		return PLAYER_CANNOT_MOVE;
+
+	cube *tile = tiles[(int)move_to_pos.x][(int)move_to_pos.y][(int)move_to_pos.z];
+	if (tile->type == "air")
+	{
+		int solid_tile = -1;
+		std::string solid_tile_type;
+
+		//we can skip i=0 because that's the tile we just looked at - which would have to be air to get here.
+		for (int i = 1; i <= 2; i++)
+		{
+			vec3 pos_down = move_to_pos + vec3(0.0f, i * -1.0f, 0.0f); 
+
+			if (pos_down.y < 0 || pos_down.y >= MAX_TILES_Y)
+				break;
+
+			if (player_is_valid_tile(tiles, pos_down))
+			{
+				cube *tile_dn = tiles[(int)pos_down.x][(int)pos_down.y][(int)pos_down.z];
+	
+				if (tile_dn->type != "air")
+				{
+					solid_tile = i;
+					solid_tile_type = tile_dn->type;
+					break;
+				}
+			}
+		}
+
+		if (solid_tile == -1)
+			return PLAYER_CANNOT_MOVE;
+		else
+		{	//we found a solid tile somewhere down, which means we can move here.
+			if (solid_tile == 1)
+				return PLAYER_CAN_MOVE;
+			else if (solid_tile == 2)
+				return PLAYER_CAN_MOVE_DOWN;
+			else return PLAYER_CANNOT_MOVE;	//this shouldn't really ever be hit
+		}
+
+	}
+	else 
+	{
+		int solid_tile = -1;
+		std::string solid_tile_type;
+
+		//the tile we are looking at is solid. Look above it for a non-solid tile.
+
+		vec3 pos_down = move_to_pos + vec3(0.0f, 1.0f, 0.0f); 
+		if (player_is_valid_tile(tiles, pos_down))
+		{
+			cube *tile_new = tiles[(int)pos_down.x][(int)pos_down.y][(int)pos_down.z];
+			if (tile_new->type == "air")
+				return PLAYER_CAN_MOVE_UP;
+			else return PLAYER_CANNOT_MOVE;			
+		}
+	}
+}
+
+bool player_is_valid_tile(cube *tiles[MAX_TILES_X][MAX_TILES_Y][MAX_TILES_Z], vec3 move_to_pos)
 {
 	if (move_to_pos.x < 0 || move_to_pos.y < 0 || move_to_pos.z < 0)
 		return false;
@@ -230,8 +317,15 @@ bool player_can_move_to_tile(player *pl, cube *tiles[MAX_TILES_X][MAX_TILES_Y][M
 	if (tiles[(int)move_to_pos.x][(int)move_to_pos.y][(int)move_to_pos.z] == NULL)
 		return false;
 
-	cube *tile = tiles[(int)move_to_pos.x][(int)move_to_pos.y][(int)move_to_pos.z];
-	if (tile->type == "air")
-		return true;
-	else return false;
+	return true;
+}
+
+void player_begin_lerp(player *pl, vec3 start, vec3 end, float time)
+{
+	pl->lerp_start = start;
+	pl->lerp_end = end;
+
+	pl->lerp_start_time = time;
+
+	pl->is_lerp = true;
 }

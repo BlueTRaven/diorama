@@ -78,6 +78,21 @@ void diorama_init(std::map<std::string, Decl> cube_types)
 		}
 	}
 
+	for (int x = 0; x < 5; x++)
+	{
+		for (int y = 0; y < 2; y++)
+		{
+			for (int z = 0; z < 5; z++)
+			{
+				ent = new entity();
+				create_entity(ent, transform(vec3(x, y, z), vec3(0.0f), vec3(1.0f)));
+				
+				cube *c = new cube();
+				create_cube(ent, c, cube_types["grass_01"]);
+			}
+		}
+	}	
+
 	if (diorama_state == DIORAMA_STATE_EDITOR)
 		set_selected_tile(vec3(1.0f, 2.0f, 1.0f));	
 }
@@ -152,7 +167,7 @@ void diorama_keybind_updated(keybind bind)
 
 void diorama_player_keybind_updated(keybind bind)
 {
-	player_keybind_updated(pl, tiles, bind);
+	player_keybind_updated(pl, (float)glfwGetTime(), tiles, bind);
 }
 
 void diorama_draw()
@@ -168,7 +183,7 @@ void diorama_draw()
 	ratio = width / (float)height;
 
 	glViewport(0, 0, width, height);
-	glClearColor(0.0f, 0.0f, 0.1f, 0.0f);
+	glClearColor(background_color.x, background_color.y, background_color.z, background_color.w);
 	
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	
