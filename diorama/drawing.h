@@ -6,10 +6,11 @@
 #include <glad\glad.h>
 #include <GLFW\glfw3.h>
 
-extern GLint program_general;
 extern bool draw_wireframe;
 
 void draw_vertdata(vertex_array *vert_array, transform trans);
+
+void set_pers_and_camera(GLint program, int projection_type);
 
 GLint uniform_float(GLint program, const char *name, float value);
 

@@ -9,6 +9,7 @@ location Assets/textures/player.png;
 declend;
 
 asset texture dirt_01:
+shader generic;
 location Assets/textures/dirt_01.png;
 walk_sound Assets/sounds/dirt_walk_01.wav;
 #reference other asset AssetSound in-code?
@@ -16,10 +17,12 @@ destroy_sound; dirt_walk_01;
 declend;
 
 asset texture dirt_grass_side_01:
+shader generic;
 location Assets/textures/dirt_grass_side_01.png;
 declend;
 
 asset texture grass_01:
+shader generic;
 location Assets/textures/grass_01.png;
 walk_sound Assets/sounds/grass_walk_01.wav;
 destroy_sound Assets/sounds/grass_walk_01.wav;
@@ -52,10 +55,10 @@ side_w dirt_01;
 side_u dirt_01;
 declend;
 
-asset vertex_shader vertex_basic:
+asset vertex_shader vertex_generic:
 location Assets/shaders/vertex_basic.glsl;
 declend;
 
-asset fragment_shader fragment_basic:
+asset fragment_shader fragment_generic:
 location Assets/shaders/fragment_basic.glsl;
 declend;

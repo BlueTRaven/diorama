@@ -3,8 +3,6 @@
 #include <glad\glad.h>
 #include <GLFW\glfw3.h>
 
-GLint program_general;
-
 bool draw_wireframe;
 
 void shader_create_general(std::vector<Decl> assets);

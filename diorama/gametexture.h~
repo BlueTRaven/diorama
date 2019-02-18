@@ -8,6 +8,7 @@
 
 #include "variables.h"
 #include "gamemath.h"
+#include "shader.h"
 
 extern std::vector<Decl> assets;
 
@@ -19,7 +20,11 @@ struct texture
 
 	GLuint gl_pointer;
 
+	Shader draw_shader;
+
 	vec2 size;
 };
+
+texture* load_get_texture(std::string tex_name);
 
 bool load_texture(std::string tex_name);

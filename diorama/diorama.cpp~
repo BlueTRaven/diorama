@@ -10,6 +10,7 @@
 #include "input.h"
 #include "camera.h"
 #include "game.h"
+#include "shader.h"
 
 #include <stdio.h>
 
@@ -172,7 +173,7 @@ void diorama_player_keybind_updated(keybind bind)
 
 void diorama_draw()
 {
-	clear_glerrors();
+	glerrors_startlisten();
 
 	GLFWwindow *window = glfwGetCurrentContext();
 
@@ -183,7 +184,7 @@ void diorama_draw()
 	ratio = width / (float)height;
 
 	glViewport(0, 0, width, height);
-	glClearColor(background_color.r, background_color.g, background_color.b, background_color.a);
+	glClearColor(background_color.x, background_color.y, background_color.z, background_color.w);
 	
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	
@@ -194,9 +195,11 @@ void diorama_draw()
 
 void draw_world(int width, int height, float ratio)
 {
-	glUseProgram(program_general);
+	glerrors_startlisten();	
+	glUseProgram(shaders["generic"].program);
+	glerrors_endlisten("Using Program");
 
-	float pers_near = 1.0f;
+/*	float pers_near = 1.0f;
 	float pers_far = 1000.0f;
 
 	float top, bottom, left, right;
@@ -204,7 +207,7 @@ void draw_world(int width, int height, float ratio)
 	mat4x4 matrix = get_perspective(left, right, top, bottom, pers_near, pers_far);
 
 	uniform_mat4(program_general, "projection", 1, true, matrix.m); 
-	uniform_mat4(program_general, "camera", 1, true, camera_get_matrix().m); 
+	uniform_mat4(program_general, "camera", 1, true, camera_get_matrix().m); */
 
 	glEnable(GL_CULL_FACE);
 	glFrontFace(GL_CW);
@@ -212,10 +215,14 @@ void draw_world(int width, int height, float ratio)
 	
 	glEnable(GL_MULTISAMPLE);
 
+	glerrors_startlisten();
+	
 	for (int i = 0; i < entities.size(); i++)
 		entity_draw(entities[i]);
 
-	printf_glerrors();	
+	glerrors_endlisten("Draw Entities");
+
+	glerrors_endlisten("Draw World");	
 }
 
 int create_entity(entity *ent, transform trans)

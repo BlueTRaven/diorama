@@ -195,8 +195,12 @@ void player_update(player *pl, float time)
 		{
 			pl->ent->trans.position = pl->lerp_end;
 			pl->is_lerp = false;
+
+			if (pl->is_lerp_queued)
+				player_begin_lerp(pl, pl->ent->trans.position, pl->lerp_queued_end, time);
 		}
 	}
+	else pl->lerp_end = pl->ent->trans.position;
 }
 
 void player_keybind_updated(player *pl, float time, cube *tiles[MAX_TILES_X][MAX_TILES_Y][MAX_TILES_Z], keybind bind)
@@ -221,7 +225,7 @@ void player_keybind_updated(player *pl, float time, cube *tiles[MAX_TILES_X][MAX
 
 void player_move_to_tile(player *pl, float time, cube *tiles[MAX_TILES_X][MAX_TILES_Y][MAX_TILES_Z], vec3 move_to_pos)
 {
-	move_to_pos = move_to_pos + pl->ent->trans.position; 
+	move_to_pos = move_to_pos + pl->lerp_end;
 
 	int player_can_move = player_can_move_to_tile(pl, tiles, move_to_pos);
 
@@ -239,7 +243,12 @@ void player_move_to_tile(player *pl, float time, cube *tiles[MAX_TILES_X][MAX_TI
 		if (to_tile == NULL)
 			printf("something went wrong with the walk system.");
 
-		player_begin_lerp(pl, pl->ent->trans.position, to_tile->ent->trans.position, time);
+		if (pl->is_lerp)
+		{
+			pl->is_lerp_queued = true;
+			pl->lerp_queued_end = to_tile->ent->trans.position;
+		}
+		else player_begin_lerp(pl, pl->ent->trans.position, to_tile->ent->trans.position, time);
 
 		pl->tile = to_tile;
 	}
@@ -322,6 +331,8 @@ bool player_is_valid_tile(cube *tiles[MAX_TILES_X][MAX_TILES_Y][MAX_TILES_Z], ve
 
 void player_begin_lerp(player *pl, vec3 start, vec3 end, float time)
 {
+	pl->is_lerp_queued = false;
+
 	pl->lerp_start = start;
 	pl->lerp_end = end;
 

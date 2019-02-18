@@ -12,6 +12,7 @@
 #include "variables.h"
 #include "logging.h"
 #include "gametexture.h"
+#include "shader.h"
 
 bool gametexture_initialized = false;
 
@@ -36,7 +37,11 @@ texture* load_get_texture(std::string tex_name)
 		//texture could not be found; load it
 		if (!load_texture(tex_name))
 			printf("Could not load texture %s.\n", tex_name.c_str());
-		else printf("Texture %s loaded.\n", tex_name.c_str());
+		else 
+		{
+			printf("Texture %s loaded.\n", tex_name.c_str());
+			return loaded_textures[tex_name];
+		}
 	}
 }
 
@@ -50,41 +55,58 @@ bool load_texture(std::string tex_name)
 		if (decl.name == tex_name)
 		{
 			if (decl.parameters.find("location") == decl.parameters.end())
-			{			printf("Tried to load texture %s, but it had no location parameter!", decl.name.c_str());
+			{		
+				printf("Could not find a location specified for texture asset %s.\n", tex_name.c_str());
 				return false;
 			}
-			else
+
+			if (decl.parameters.find("shader") == decl.parameters.end())
 			{
-				std::string location = decl.parameters["location"].value;
-
-				std::string directory = "C:/Users/Taylor/Documents/Programming/C++/diorama/diorama/";
-				
-				int width, height, nrChannels;
-				unsigned char *data = stbi_load((directory + location).c_str(), &width, &height, &nrChannels, 0);
-
-				if (data == NULL)
-				{
-					printf("STBI could not load texture %s. Could not find the location?\n", decl.name.c_str());
-					return false;
-				}
-
-				GLuint gl_pointer;
-				glGenTextures(1, &gl_pointer);
-				glBindTexture(GL_TEXTURE_2D, gl_pointer);
-
-				glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
-				texture *tex = new texture();
-				tex->name = tex_name;
-				tex->location = location;
-				tex->gl_pointer = gl_pointer;
-				tex->size = vec2(width, height);
-
-				stbi_image_free(data);
-				glBindTexture(GL_TEXTURE_2D, 0);
-
-				loaded_textures.insert(std::pair<std::string, texture*>(tex_name, tex));
-				return true;
+				printf("Could not find a shader specified for texture asset %s.\n", tex_name.c_str());
+				return false;
 			}
+
+			if (game_shaders.find(decl.parameters["shader"].value) == shaders.end())
+			{
+				printf("Could not find specified shader %s for texture asset %s.\n", decl.parameters["shader"].value.c_str(), tex_name.c_str());
+				return false;
+			}
+
+			std::string shader_name = decl.parameters["shader"].value;
+
+			std::string location = decl.parameters["location"].value;
+			std::string directory = "C:/Users/Taylor/Documents/Programming/C++/diorama/diorama/";
+				
+			int width, height, nrChannels;
+			unsigned char *data = stbi_load((directory + location).c_str(), &width, &height, &nrChannels, 0);
+
+			if (data == NULL)
+			{
+				printf("STBI could not load texture %s. Could not find the location?\n", decl.name.c_str());
+				return false;
+			}
+
+			glerrors_startlisten();
+
+			GLuint gl_pointer;
+			glGenTextures(1, &gl_pointer);
+			glBindTexture(GL_TEXTURE_2D, gl_pointer);
+
+			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
+			texture *tex = new texture();
+			tex->name = tex_name;
+			tex->location = location;
+			tex->gl_pointer = gl_pointer;
+			tex->shader = shaders[shader_name];
+			tex->size = vec2(width, height);
+
+			stbi_image_free(data);
+			glBindTexture(GL_TEXTURE_2D, 0);
+			
+			glerrors_endlisten("Texture Binding");
+
+			loaded_textures.insert(std::pair<std::string, texture*>(tex_name, tex));
+			return true;
 		}
 	}
 

@@ -11,4 +11,11 @@ const int DIORAMA_STATE_EDITOR = 1 << 1;
 
 static int diorama_state;
 
-static vec4 background_color;
+static vec4 background_color = vec4(1.0f);
+
+static const int WIDTH_DEFAULT;
+static const int HEIGHT_DEFAULT;
+
+static int current_width;
+static int current_height;
+

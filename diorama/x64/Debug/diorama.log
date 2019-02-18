@@ -1,6 +1,14 @@
-﻿  vertex_handler.cpp
-c:\users\taylor\documents\programming\c++\diorama\diorama\vertex_handler.cpp(49): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
-c:\users\taylor\documents\programming\c++\diorama\diorama\vertex_handler.cpp(56): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
-c:\users\taylor\documents\programming\c++\diorama\diorama\vertex_handler.cpp(67): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
-c:\users\taylor\documents\programming\c++\diorama\diorama\vertex_handler.cpp(71): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
+﻿  camera.cpp
+  diorama.cpp
+c:\users\taylor\documents\programming\c++\diorama\diorama\diorama.cpp(59): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+c:\users\taylor\documents\programming\c++\diorama\diorama\diorama.cpp(74): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+c:\users\taylor\documents\programming\c++\diorama\diorama\diorama.cpp(89): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+c:\users\taylor\documents\programming\c++\diorama\diorama\diorama.cpp(111): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+c:\users\taylor\documents\programming\c++\diorama\diorama\diorama.cpp(234): warning C4267: 'return': conversion from 'size_t' to 'int', possible loss of data
+  drawing.cpp
+c:\users\taylor\documents\programming\c++\diorama\diorama\drawing.cpp(52): warning C4267: 'argument': conversion from 'size_t' to 'GLsizei', possible loss of data
+  entity.cpp
+  main.cpp
+  Generating Code...
+c:\users\taylor\documents\programming\c++\diorama\diorama\entity.cpp(317): warning C4715: 'player_can_move_to_tile': not all control paths return a value
   diorama.vcxproj -> C:\Users\Taylor\Documents\Programming\C++\diorama\x64\Debug\diorama.exe

@@ -62,6 +62,9 @@ struct player
 	bool is_lerp;
 	vec3 lerp_start;
 	vec3 lerp_end;
+
+	bool is_lerp_queued;
+	vec3 lerp_queued_end;
 };
 
 void player_init(entity *ent, player *pl);

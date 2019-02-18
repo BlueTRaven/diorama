@@ -33,6 +33,8 @@ struct vertex_array
 	GLuint vert_buffer;
 	GLuint index_buffer;
 
+	shader _shader;
+
 	vec4 tint;
 
 	std::vector<Vertex> vertices;
@@ -42,6 +44,7 @@ struct vertex_array
 	
 	vertex_array()
 	{
+		draw_flags = 0;
 		draw_flags |= DRAW;
 		draw_flags |= DRAW_TEXTURE;
 

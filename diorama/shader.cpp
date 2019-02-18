@@ -20,6 +20,8 @@ static bool compiled_shaders = false;
 static vector<GLuint> vertex_shaders;
 static vector<GLuint> fragment_shaders;
 
+std::map<std::string, Shader> game_shaders;
+
 void compile_all_shaders(vector<Decl> &assets)
 {
 	compiled_shaders = true;
@@ -51,8 +53,10 @@ void compile_all_shaders(vector<Decl> &assets)
 	}
 }
 
-void link_all_shaders(GLuint program)
+void link_all_shaders(Shader shader)
 {	//TODO do we need to link ALL shaders??
+
+	GLuint program = shader.program;
 
 	if (!compiled_shaders)
 	{
@@ -109,7 +113,15 @@ void link_all_shaders(GLuint program)
 
 	compiled_shaders = false;
 
-	printf("Finished linking shaders to program at 0x%X.\n", program);
+	printf("Finished linking shaders to program %s.\n", shader.name.c_str());
+
+	if (!shaders_initialized)
+	{
+		game_shaders = std::map<std::string, Shader>();
+		shaders_initialized = true;
+	}
+	
+	game_shaders.insert(std::make_pair(shader.name, shader));
 }
 
 GLint compile_shader(GLenum type, string filename)

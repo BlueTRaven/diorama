@@ -3,6 +3,8 @@
 #include <glad\glad.h>
 #include <GLFW\glfw3.h>
 
-bool printf_glerrors();
+#include <string>
 
-void clear_glerrors();
+bool glerrors_endlisten(std::string);
+
+void glerrors_startlisten();
